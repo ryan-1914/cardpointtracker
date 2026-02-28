@@ -181,7 +181,7 @@ function populateCatalogIssuerOptions() {
     ...issuers.map((issuer) => `<option value="${escapeHtml(issuer)}">${escapeHtml(issuer)}</option>`),
   ];
   els.catalogIssuer.innerHTML = options.join("");
-  els.catalogIssuer.value = "all";
+  els.catalogIssuer.value = state.catalogIssuer || "all";
 }
 
 async function onSubmitCard(event) {
@@ -286,7 +286,12 @@ function renderCatalog() {
   els.catalogCount.textContent = `${filtered.length} ${filtered.length === 1 ? "card" : "cards"}`;
 
   if (filtered.length === 0) {
-    els.catalogList.innerHTML = `<li class="muted catalog-empty">No cards match your filters yet.</li>`;
+    const hasSearch = Boolean(String(state.catalogSearch || "").trim());
+    const hasIssuerFilter = String(state.catalogIssuer || "all").toLowerCase() !== "all";
+    const emptyMessage = hasSearch || hasIssuerFilter
+      ? "No catalog cards match this search/filter. Try clearing search or switching to All issuers."
+      : "Catalog is empty. Check back after catalog data is loaded.";
+    els.catalogList.innerHTML = `<li class="muted catalog-empty">${escapeHtml(emptyMessage)}</li>`;
     return;
   }
 
