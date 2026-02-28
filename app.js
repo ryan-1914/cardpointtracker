@@ -184,11 +184,22 @@ function wireEvents() {
 
     const deleteId = event.target.getAttribute("data-delete-id");
     if (!deleteId) return;
+
+    const deletedCard = state.cards.find((card) => card.id === deleteId);
     await deleteCard(deleteId);
-    state.cards = state.cards.filter((card) => card.id !== deleteId);
+    state.cards = walletCore.removeCatalogWalletCard(state.cards, deleteId);
     if (state.editingCardId === deleteId) {
       resetForm();
     }
+
+    const removedCatalogId = walletCore.getCatalogCardId(deletedCard);
+    if (removedCatalogId) {
+      const catalogMembership = walletCore.getCatalogMembership(state.cards);
+      if (!catalogMembership.has(removedCatalogId)) {
+        setCatalogFeedback(removedCatalogId, "info", "Removed from wallet.");
+      }
+    }
+
     render();
   });
 }

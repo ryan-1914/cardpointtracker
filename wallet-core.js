@@ -184,6 +184,26 @@
     return [...normalizedList, normalizedCard];
   }
 
+  function removeCatalogWalletCard(walletCards, walletCardId) {
+    const targetWalletCardId = String(walletCardId || "").trim();
+    if (!targetWalletCardId) {
+      return normalizeWalletCards(walletCards);
+    }
+
+    return normalizeWalletCards(walletCards).filter((card) => card.id !== targetWalletCardId);
+  }
+
+  function getCatalogMembership(walletCards) {
+    const membership = new Set();
+    normalizeWalletCards(walletCards).forEach((card) => {
+      const catalogCardId = getCatalogCardId(card);
+      if (!catalogCardId) return;
+      membership.add(catalogCardId);
+    });
+
+    return membership;
+  }
+
   return {
     ORIGIN_CATALOG,
     ORIGIN_CUSTOM,
@@ -195,6 +215,9 @@
     hasCatalogDuplicate,
     catalogCardAlreadyInWallet: hasCatalogDuplicate,
     addWalletCard,
+    removeCatalogWalletCard,
+    removeCatalogFromWallet: removeCatalogWalletCard,
+    getCatalogMembership,
     toCatalogWalletId,
   };
 });

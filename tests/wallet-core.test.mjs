@@ -6,11 +6,13 @@ import walletCore from "../wallet-core.js";
 const {
   addWalletCard,
   createCatalogWalletCard,
+  getCatalogMembership,
   getCatalogCardId,
   hasCatalogDuplicate,
   normalizeRewardEntries,
   normalizeWalletCard,
   normalizeWalletCards,
+  removeCatalogWalletCard,
   toCatalogWalletId,
 } = walletCore;
 
@@ -157,6 +159,55 @@ test("addWalletCard blocks duplicate catalog cards for stale repeated interactio
   assert.equal(once.length, 1);
   assert.equal(twice.length, 1);
   assert.equal(twice[0].catalogCardId, "citi-double-cash");
+});
+
+test("removeCatalogWalletCard removes catalog entries and updates membership", () => {
+  const walletCards = normalizeWalletCards([
+    createCatalogWalletCard(
+      {
+        id: "amex-gold",
+        name: "American Express Gold Card",
+        issuer: "American Express",
+        rewards: [{ category: "dining", multiplier: 4 }],
+      },
+      "2026-02-28T15:30:00.000Z",
+    ),
+    {
+      id: "custom-one",
+      name: "Custom One",
+      issuer: "Local Bank",
+      rewards: [{ category: "travel", multiplier: 2 }],
+    },
+  ]);
+
+  const removed = removeCatalogWalletCard(walletCards, "catalog-amex-gold");
+  const membership = getCatalogMembership(removed);
+
+  assert.equal(removed.length, 1);
+  assert.equal(removed[0].originType, "custom");
+  assert.equal(membership.has("amex-gold"), false);
+  assert.equal(hasCatalogDuplicate(removed, "amex-gold"), false);
+});
+
+test("catalog card becomes re-addable after removal", () => {
+  const catalogCard = createCatalogWalletCard(
+    {
+      id: "wells-fargo-autograph",
+      name: "Wells Fargo Autograph",
+      issuer: "Wells Fargo",
+      rewards: [{ category: "travel", multiplier: 3 }],
+    },
+    "2026-02-28T15:31:00.000Z",
+  );
+
+  const once = addWalletCard([], catalogCard);
+  const removed = removeCatalogWalletCard(once, catalogCard.id);
+  const readded = addWalletCard(removed, catalogCard);
+
+  assert.equal(once.length, 1);
+  assert.equal(removed.length, 0);
+  assert.equal(readded.length, 1);
+  assert.equal(readded[0].catalogCardId, "wells-fargo-autograph");
 });
 
 test("normalizeRewardEntries deduplicates categories and drops invalid values", () => {
