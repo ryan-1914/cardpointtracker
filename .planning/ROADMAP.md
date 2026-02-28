@@ -70,7 +70,7 @@ Plans:
   1. User can create custom cards manually with reward multipliers.
   2. User can edit custom cards but cannot edit catalog cards.
   3. User can delete custom cards from wallet without affecting catalog definitions.
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 04-01: Introduce explicit card-origin/type model in wallet entities
@@ -98,5 +98,5 @@ Plans:
 | 1. Baseline Comparison Hardening | 2/2 | Complete    | 2026-02-28 |
 | 2. Catalog Discovery Experience | 3/3 | Complete    | 2026-02-28 |
 | 3. Catalog-to-Wallet Integration | 3/3 | Complete    | 2026-02-28 |
-| 4. Card Type Rules & Editability | 1/3 | In Progress|  |
+| 4. Card Type Rules & Editability | 2/3 | In Progress|  |
 | 5. Mixed Wallet UX Validation | 0/2 | Not started | - |

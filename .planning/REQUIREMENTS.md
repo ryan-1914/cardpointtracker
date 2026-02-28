@@ -14,7 +14,7 @@
 ### Custom Cards
 
 - [x] **CUS-01**: User can manually add a custom card with one or more category multipliers
-- [ ] **CUS-02**: User can edit an existing custom card's details and multipliers
+- [x] **CUS-02**: User can edit an existing custom card's details and multipliers
 - [ ] **CUS-03**: User can delete a custom card from wallet
 
 ### Catalog Cards
@@ -24,7 +24,7 @@
 - [x] **CAT-03**: User can filter catalog cards by issuer
 - [x] **CAT-04**: User can add a catalog card to wallet with predefined multipliers
 - [x] **CAT-05**: User cannot add the same catalog card to wallet more than once
-- [ ] **CAT-06**: User cannot edit catalog card multipliers/details after adding to wallet
+- [x] **CAT-06**: User cannot edit catalog card multipliers/details after adding to wallet
 - [x] **CAT-07**: User can delete a catalog card from wallet
 
 ## v2 Requirements
@@ -57,14 +57,14 @@
 | WAL-02 | Phase 1 | Complete |
 | WAL-03 | Phase 5 | Pending |
 | CUS-01 | Phase 4 | Complete |
-| CUS-02 | Phase 4 | Pending |
+| CUS-02 | Phase 4 | Complete |
 | CUS-03 | Phase 4 | Pending |
 | CAT-01 | Phase 2 | Complete |
 | CAT-02 | Phase 2 | Complete |
 | CAT-03 | Phase 2 | Complete |
 | CAT-04 | Phase 3 | Complete |
 | CAT-05 | Phase 3 | Complete |
-| CAT-06 | Phase 4 | Pending |
+| CAT-06 | Phase 4 | Complete |
 | CAT-07 | Phase 3 | Complete |
 
 **Coverage:**
