@@ -21,7 +21,7 @@ test("buildCatalogCards returns normalized fixed catalog entries", () => {
   const withRewards = cards.filter((card) => card.rewards.length > 0);
   const withoutRewards = cards.filter((card) => card.rewards.length === 0);
   assert.ok(withRewards.length >= CATALOG_SEED.length);
-  assert.ok(withoutRewards.length > 0);
+  assert.equal(withoutRewards.length, 0);
 
   cards.forEach((card) => {
     assert.ok(card.id);
@@ -153,4 +153,104 @@ test("buildCatalogCards collapses known near-duplicate product aliases", () => {
 
   assert.equal(names.has("Bank of America Premium Rewards"), true);
   assert.equal(names.has("Premium Rewards"), false);
+});
+
+test("buildCatalogCards applies reward overrides for selected reference cards", () => {
+  const cards = buildCatalogCards();
+  const byName = new Map(cards.map((card) => [card.name, card]));
+
+  const amazonVisa = byName.get("Amazon Visa");
+  assert.ok(amazonVisa);
+  assert.deepEqual(amazonVisa.rewards, [
+    { category: "dining", multiplier: 2 },
+    { category: "gas", multiplier: 2 },
+    { category: "online", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "transit", multiplier: 2 },
+  ]);
+
+  const ventureRewards = byName.get("Venture Rewards");
+  assert.ok(ventureRewards);
+  assert.deepEqual(ventureRewards.rewards, [
+    { category: "other", multiplier: 2 },
+    { category: "travel", multiplier: 2 },
+    { category: "travel_portal", multiplier: 5 },
+  ]);
+
+  const strataPremier = byName.get("Citi Strata Premier");
+  assert.ok(strataPremier);
+  assert.deepEqual(strataPremier.rewards, [
+    { category: "dining", multiplier: 3 },
+    { category: "gas", multiplier: 3 },
+    { category: "groceries", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "travel", multiplier: 3 },
+    { category: "travel_portal", multiplier: 10 },
+  ]);
+
+  const freedomUnlimited = byName.get("Chase Freedom Unlimited");
+  assert.ok(freedomUnlimited);
+  assert.deepEqual(freedomUnlimited.rewards, [
+    { category: "dining", multiplier: 3 },
+    { category: "drugstore", multiplier: 3 },
+    { category: "other", multiplier: 1.5 },
+    { category: "travel_portal", multiplier: 5 },
+  ]);
+
+  const unitedClub = byName.get("United Club Card");
+  assert.ok(unitedClub);
+  assert.deepEqual(unitedClub.rewards, [
+    { category: "dining", multiplier: 2 },
+    { category: "other", multiplier: 1 },
+    { category: "travel", multiplier: 4 },
+  ]);
+
+  const deltaPlatinum = byName.get("Delta SkyMiles Platinum");
+  assert.ok(deltaPlatinum);
+  assert.deepEqual(deltaPlatinum.rewards, [
+    { category: "dining", multiplier: 3 },
+    { category: "groceries", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "travel", multiplier: 3 },
+  ]);
+
+  const hiltonSurpass = byName.get("Hilton Honors Surpass");
+  assert.ok(hiltonSurpass);
+  assert.deepEqual(hiltonSurpass.rewards, [
+    { category: "dining", multiplier: 6 },
+    { category: "gas", multiplier: 6 },
+    { category: "groceries", multiplier: 6 },
+    { category: "online", multiplier: 4 },
+    { category: "other", multiplier: 3 },
+    { category: "travel", multiplier: 12 },
+  ]);
+
+  const jetBluePlus = byName.get("JetBlue Plus Card");
+  assert.ok(jetBluePlus);
+  assert.deepEqual(jetBluePlus.rewards, [
+    { category: "dining", multiplier: 2 },
+    { category: "groceries", multiplier: 2 },
+    { category: "other", multiplier: 1 },
+    { category: "travel", multiplier: 6 },
+  ]);
+
+  const bankAmericard = byName.get("BankAmericard");
+  assert.ok(bankAmericard);
+  assert.deepEqual(bankAmericard.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const platinum = byName.get("Platinum Mastercard");
+  assert.ok(platinum);
+  assert.deepEqual(platinum.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const platinumSecured = byName.get("Platinum Secured");
+  assert.ok(platinumSecured);
+  assert.deepEqual(platinumSecured.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const usBankPlatinum = byName.get("U.S. Bank Visa Platinum");
+  assert.ok(usBankPlatinum);
+  assert.deepEqual(usBankPlatinum.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const reflect = byName.get("Wells Fargo Reflect");
+  assert.ok(reflect);
+  assert.deepEqual(reflect.rewards, [{ category: "other", multiplier: 1 }]);
 });

@@ -1,9 +1,24 @@
 const CATEGORIES = [
   { id: "dining", label: "Dining / Restaurants" },
+  { id: "entertainment", label: "Entertainment" },
+  { id: "live_entertainment", label: "Live Entertainment" },
+  { id: "fitness", label: "Fitness / Gyms" },
   { id: "groceries", label: "Groceries" },
   { id: "gas", label: "Gas" },
+  { id: "ev_charging", label: "EV Charging" },
+  { id: "home_improvement", label: "Home Improvement" },
+  { id: "utilities", label: "Utilities" },
+  { id: "phone_plans", label: "Phone Plans / Telecom" },
+  { id: "wholesale_clubs", label: "Wholesale Clubs" },
+  { id: "department_stores", label: "Department Stores" },
+  { id: "electronics", label: "Electronics" },
+  { id: "furniture", label: "Furniture" },
+  { id: "clothing", label: "Clothing" },
+  { id: "sporting_goods", label: "Sporting Goods" },
   { id: "travel", label: "Travel" },
+  { id: "travel_portal", label: "Travel (Portal)" },
   { id: "transit", label: "Transit" },
+  { id: "parking_tolls", label: "Parking & Tolls" },
   { id: "rideshare", label: "Rideshare" },
   { id: "streaming", label: "Streaming Services" },
   { id: "online", label: "Online Shopping" },
@@ -74,7 +89,7 @@ async function init() {
   const storedCards = await readCards();
   const normalizedCards = walletCore.normalizeWalletCards(storedCards);
   state.catalogCards = catalogCore.buildCatalogCards();
-  const hydratedCards = backfillCatalogNetworks(normalizedCards, state.catalogCards);
+  const hydratedCards = syncCatalogWalletCards(normalizedCards, state.catalogCards);
   if (walletCardsNeedPersistenceMigration(storedCards, hydratedCards)) {
     await replaceCards(hydratedCards);
   }
@@ -617,7 +632,7 @@ function walletCardsNeedPersistenceMigration(storedCards, normalizedCards) {
   return JSON.stringify(raw) !== JSON.stringify(normalizedCards);
 }
 
-function backfillCatalogNetworks(cards, catalogCards) {
+function syncCatalogWalletCards(cards, catalogCards) {
   const catalogById = new Map(
     (Array.isArray(catalogCards) ? catalogCards : []).map((catalogCard) => [catalogCard.id, catalogCard]),
   );
@@ -626,17 +641,27 @@ function backfillCatalogNetworks(cards, catalogCards) {
     const catalogCardId = walletCore.getCatalogCardId(card);
     if (!catalogCardId) return card;
 
-    if (String(card.network || "").trim()) {
-      return card;
-    }
+    const catalogCard = catalogById.get(catalogCardId);
+    if (!catalogCard) return card;
 
-    const catalogNetwork = String(catalogById.get(catalogCardId)?.network || "").trim();
-    if (!catalogNetwork) return card;
-
-    return walletCore.normalizeWalletCard({
+    const nextCard = walletCore.normalizeWalletCard({
       ...card,
-      network: catalogNetwork,
+      name: catalogCard.name || card.name,
+      issuer: catalogCard.issuer || card.issuer,
+      network: catalogCard.network || card.network,
+      rewards: Array.isArray(catalogCard.rewards) && catalogCard.rewards.length > 0
+        ? catalogCard.rewards
+        : card.rewards,
+      createdAt: card.createdAt,
+      updatedAt: card.updatedAt,
+      originType: card.originType,
+      origin: card.origin,
+      catalogCardId: card.catalogCardId,
     });
+
+    if (!nextCard) return card;
+    if (JSON.stringify(nextCard) === JSON.stringify(card)) return card;
+    return nextCard;
   }).filter(Boolean);
 }
 

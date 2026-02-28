@@ -16,6 +16,7 @@
       network: "Visa",
       rewards: {
         travel: 2,
+        travel_portal: 5,
         dining: 3,
         streaming: 3,
         online: 3,
@@ -28,6 +29,7 @@
       network: "Visa",
       rewards: {
         travel: 3,
+        travel_portal: 10,
         dining: 3,
         other: 1,
       },
@@ -39,7 +41,7 @@
       rewards: {
         dining: 3,
         drugstore: 3,
-        travel: 5,
+        travel_portal: 5,
         other: 1.5,
       },
     },
@@ -72,6 +74,7 @@
       network: "Visa",
       rewards: {
         travel: 2,
+        travel_portal: 10,
         other: 2,
       },
     },
@@ -166,7 +169,7 @@
       rewards: {
         dining: 3,
         drugstore: 3,
-        travel: 5,
+        travel_portal: 5,
         other: 1,
       },
     },
@@ -381,7 +384,6 @@
     // =========================
     { name: "JetBlue Plus Card", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/jetblue-plus-card/" },
     { name: "JetBlue Card", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/jetblue-card/" },
-    { name: "AAdvantage Aviator Red", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/aadvantage-aviator-red-world-elite-mastercard/" },
     { name: "Hawaiian Airlines World Elite Mastercard", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/hawaiian-airlines-world-elite-mastercard/" },
     { name: "Wyndham Earner", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/wyndham-earner-card/" },
     { name: "Wyndham Earner Plus", issuer: "Barclays", network: "Mastercard", link: "https://cards.barclaycardus.com/banking/cards/wyndham-earner-plus-card/" },
@@ -401,6 +403,324 @@
     "chase|prime visa": "amazon prime visa",
     "bank of america|customized cash rewards": "bank of america customized cash rewards",
     "bank of america|premium rewards": "bank of america premium rewards",
+  };
+
+  // Incremental reward population for reference cards that do not have inline rewards yet.
+  const CATALOG_REFERENCE_REWARD_OVERRIDES = {
+    "american express|american express green card": {
+      travel: 3,
+      transit: 3,
+      dining: 3,
+      other: 1,
+    },
+    "american express|cash magnet": {
+      other: 1.5,
+    },
+    "bank of america|travel rewards": {
+      travel: 1.5,
+      other: 1.5,
+    },
+    "bank of america|bankamericard": {
+      other: 1,
+    },
+    "bank of america|unlimited cash rewards": {
+      other: 1.5,
+    },
+    "bank of america|premium rewards elite": {
+      travel: 2,
+      dining: 2,
+      other: 1.5,
+    },
+    "capital one|venture rewards": {
+      travel: 2,
+      travel_portal: 5,
+      other: 2,
+    },
+    "capital one|ventureone rewards": {
+      travel: 1.25,
+      travel_portal: 5,
+      other: 1.25,
+    },
+    "capital one|savorone rewards": {
+      dining: 3,
+      groceries: 3,
+      streaming: 3,
+      online: 3,
+      travel_portal: 5,
+      other: 1,
+    },
+    "capital one|quicksilverone rewards": {
+      other: 1.5,
+    },
+    "capital one|platinum mastercard": {
+      other: 1,
+    },
+    "capital one|platinum secured": {
+      other: 1,
+    },
+    "capital one|quicksilver secured": {
+      other: 1.5,
+    },
+    "capital one|quicksilver rewards for students": {
+      other: 1.5,
+    },
+    "capital one|savor rewards for students": {
+      dining: 3,
+      groceries: 3,
+      streaming: 3,
+      online: 3,
+      other: 1,
+    },
+    "chase|amazon visa": {
+      online: 3,
+      dining: 2,
+      gas: 2,
+      transit: 2,
+      other: 1,
+    },
+    "chase|ihg one rewards traveler": {
+      travel: 5,
+      dining: 3,
+      gas: 3,
+      groceries: 3,
+      other: 1,
+    },
+    "chase|ihg one rewards premier": {
+      travel: 5,
+      dining: 3,
+      gas: 3,
+      other: 1,
+    },
+    "chase|marriott bonvoy bold": {
+      travel: 3,
+      other: 2,
+    },
+    "chase|marriott bonvoy boundless": {
+      travel: 6,
+      other: 2,
+    },
+    "chase|marriott bonvoy bountiful": {
+      travel: 6,
+      dining: 4,
+      groceries: 4,
+      other: 2,
+    },
+    "chase|southwest rapid rewards plus": {
+      travel: 2,
+      other: 1,
+    },
+    "chase|southwest rapid rewards premier": {
+      travel: 2,
+      other: 1,
+    },
+    "chase|southwest rapid rewards priority": {
+      travel: 2,
+      other: 1,
+    },
+    "chase|united explorer card": {
+      travel: 2,
+      dining: 2,
+      other: 1,
+    },
+    "chase|united quest card": {
+      travel: 3,
+      dining: 2,
+      other: 1,
+    },
+    "chase|united club card": {
+      travel: 4,
+      dining: 2,
+      other: 1,
+    },
+    "chase|united gateway card": {
+      travel: 2,
+      other: 1,
+    },
+    "chase|world of hyatt": {
+      travel: 4,
+      dining: 2,
+      transit: 2,
+      online: 2,
+      other: 1,
+    },
+    "citi|citi rewards+": {
+      groceries: 2,
+      gas: 2,
+      other: 1,
+    },
+    "citi|citi strata premier": {
+      travel: 3,
+      travel_portal: 10,
+      dining: 3,
+      groceries: 3,
+      gas: 3,
+      other: 1,
+    },
+    "citi|citi strata": {
+      travel: 3,
+      travel_portal: 10,
+      dining: 3,
+      groceries: 3,
+      gas: 3,
+      other: 1,
+    },
+    "citi|citi strata elite": {
+      travel: 6,
+      dining: 6,
+      other: 1,
+    },
+    "citi|citi / aadvantage mileup": {
+      groceries: 2,
+      other: 1,
+    },
+    "citi|citi / aadvantage platinum select": {
+      travel: 2,
+      gas: 2,
+      dining: 2,
+      other: 1,
+    },
+    "citi|citi / aadvantage executive": {
+      travel: 4,
+      other: 1,
+    },
+    "discover|discover it chrome": {
+      gas: 2,
+      dining: 2,
+      other: 1,
+    },
+    "discover|discover it student cash back": {
+      groceries: 5,
+      gas: 5,
+      online: 5,
+      dining: 5,
+      other: 1,
+    },
+    "synchrony|paypal cashback mastercard": {
+      online: 3,
+      other: 2,
+    },
+    "american express|delta skymiles blue": {
+      dining: 2,
+      other: 1,
+    },
+    "american express|delta skymiles gold": {
+      dining: 2,
+      groceries: 2,
+      other: 1,
+    },
+    "american express|delta skymiles platinum": {
+      travel: 3,
+      dining: 3,
+      groceries: 3,
+      other: 1,
+    },
+    "american express|delta skymiles reserve": {
+      travel: 3,
+      other: 1,
+    },
+    "american express|marriott bonvoy (no-fee)": {
+      travel: 6,
+      other: 2,
+    },
+    "american express|marriott bonvoy bevy": {
+      travel: 6,
+      dining: 4,
+      groceries: 4,
+      other: 2,
+    },
+    "american express|marriott bonvoy brilliant": {
+      travel: 6,
+      dining: 3,
+      other: 2,
+    },
+    "american express|hilton honors": {
+      travel: 7,
+      dining: 5,
+      groceries: 5,
+      gas: 5,
+      other: 3,
+    },
+    "american express|hilton honors surpass": {
+      travel: 12,
+      dining: 6,
+      groceries: 6,
+      gas: 6,
+      online: 4,
+      other: 3,
+    },
+    "american express|hilton honors aspire": {
+      travel: 14,
+      travel_portal: 7,
+      dining: 7,
+      other: 3,
+    },
+    "barclays|hawaiian airlines world elite mastercard": {
+      travel: 3,
+      dining: 2,
+      gas: 2,
+      groceries: 2,
+      other: 1,
+    },
+    "barclays|jetblue card": {
+      travel: 3,
+      dining: 2,
+      groceries: 2,
+      other: 1,
+    },
+    "barclays|jetblue plus card": {
+      travel: 6,
+      dining: 2,
+      groceries: 2,
+      other: 1,
+    },
+    "barclays|wyndham earner": {
+      travel: 5,
+      gas: 5,
+      dining: 2,
+      groceries: 2,
+      other: 1,
+    },
+    "barclays|wyndham earner plus": {
+      travel: 6,
+      gas: 6,
+      dining: 4,
+      groceries: 4,
+      other: 1,
+    },
+    "barclays|wyndham earner business": {
+      travel: 8,
+      gas: 8,
+      utilities: 5,
+      online: 5,
+      other: 1,
+    },
+    "synchrony|venmo credit card": {
+      dining: 3,
+      groceries: 3,
+      gas: 3,
+      transit: 3,
+      online: 3,
+      travel: 3,
+      entertainment: 3,
+      utilities: 3,
+      other: 1,
+    },
+    "u.s. bank|u.s. bank altitude reserve": {
+      travel: 3,
+      travel_portal: 5,
+      other: 1,
+    },
+    "u.s. bank|u.s. bank shopper cash rewards": {
+      online: 6,
+      streaming: 3,
+      other: 1,
+    },
+    "u.s. bank|u.s. bank visa platinum": {
+      other: 1,
+    },
+    "wells fargo|wells fargo reflect": {
+      other: 1,
+    },
   };
 
   function slugify(value) {
@@ -443,6 +763,13 @@
     return `${issuer}|${aliasedName}`;
   }
 
+  function getReferenceRewardOverride(card) {
+    const issuer = String(card?.issuer || "").trim().toLowerCase();
+    const name = String(card?.name || "").trim().toLowerCase();
+    const key = `${issuer}|${name}`;
+    return CATALOG_REFERENCE_REWARD_OVERRIDES[key];
+  }
+
   function normalizeRewardEntries(rewardsInput) {
     const pairs = Array.isArray(rewardsInput)
       ? rewardsInput.map((entry) => [entry?.category, entry?.multiplier])
@@ -472,7 +799,8 @@
     const link = sanitizeLink(card?.link);
     const idSeed = card?.id || `${issuer}-${name || `card-${index + 1}`}`;
     const id = slugify(idSeed) || `catalog-card-${index + 1}`;
-    const rewards = normalizeRewardEntries(card?.rewards);
+    const rewardsInput = card?.rewards || getReferenceRewardOverride(card);
+    const rewards = normalizeRewardEntries(rewardsInput);
 
     return {
       id,
