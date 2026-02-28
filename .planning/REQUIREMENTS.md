@@ -25,7 +25,7 @@
 - [x] **CAT-04**: User can add a catalog card to wallet with predefined multipliers
 - [x] **CAT-05**: User cannot add the same catalog card to wallet more than once
 - [ ] **CAT-06**: User cannot edit catalog card multipliers/details after adding to wallet
-- [ ] **CAT-07**: User can delete a catalog card from wallet
+- [x] **CAT-07**: User can delete a catalog card from wallet
 
 ## v2 Requirements
 
@@ -65,7 +65,7 @@
 | CAT-04 | Phase 3 | Complete |
 | CAT-05 | Phase 3 | Complete |
 | CAT-06 | Phase 4 | Pending |
-| CAT-07 | Phase 3 | Pending |
+| CAT-07 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 13 total
