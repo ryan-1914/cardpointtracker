@@ -26,7 +26,7 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
   1. User can select any available category and see wallet cards ranked highest-to-lowest multiplier.
   2. User can clearly identify the best card recommendation for the selected category.
   3. Existing baseline comparison behavior remains stable after foundation refactors.
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 01-01-PLAN.md — Extract deterministic comparison core with regression tests
@@ -95,7 +95,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Baseline Comparison Hardening | 0/2 | Not started | - |
+| 1. Baseline Comparison Hardening | 1/2 | In Progress|  |
 | 2. Catalog Discovery Experience | 0/3 | Not started | - |
 | 3. Catalog-to-Wallet Integration | 0/3 | Not started | - |
 | 4. Card Type Rules & Editability | 0/3 | Not started | - |
