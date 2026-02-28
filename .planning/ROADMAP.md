@@ -98,5 +98,5 @@ Plans:
 | 1. Baseline Comparison Hardening | 2/2 | Complete    | 2026-02-28 |
 | 2. Catalog Discovery Experience | 3/3 | Complete    | 2026-02-28 |
 | 3. Catalog-to-Wallet Integration | 3/3 | Complete    | 2026-02-28 |
-| 4. Card Type Rules & Editability | 3/3 | Complete   | 2026-02-28 |
+| 4. Card Type Rules & Editability | 3/3 | Complete    | 2026-02-28 |
 | 5. Mixed Wallet UX Validation | 0/2 | Not started | - |
