@@ -71,7 +71,11 @@ async function init() {
   wireEvents();
   dbPromise = openDb();
   const storedCards = await readCards();
-  state.cards = walletCore.normalizeWalletCards(storedCards);
+  const normalizedCards = walletCore.normalizeWalletCards(storedCards);
+  if (walletCardsNeedPersistenceMigration(storedCards, normalizedCards)) {
+    await replaceCards(normalizedCards);
+  }
+  state.cards = normalizedCards;
   state.catalogCards = catalogCore.buildCatalogCards();
   populateCatalogIssuerOptions();
   resetForm();
@@ -262,9 +266,10 @@ async function onSubmitCard(event) {
 
   await saveCard(card);
   if (editingCard) {
-    state.cards = state.cards.map((existing) => (existing.id === card.id ? card : existing));
+    const updatedCards = state.cards.map((existing) => (existing.id === card.id ? card : existing));
+    state.cards = walletCore.normalizeWalletCards(updatedCards);
   } else {
-    state.cards.push(card);
+    state.cards = walletCore.addWalletCard(state.cards, card);
   }
 
   resetForm();
@@ -548,6 +553,28 @@ async function readCards() {
     const request = store.getAll();
     request.onsuccess = () => resolve(request.result || []);
     request.onerror = () => reject(request.error);
+  });
+}
+
+function walletCardsNeedPersistenceMigration(storedCards, normalizedCards) {
+  const raw = Array.isArray(storedCards) ? storedCards : [];
+  return JSON.stringify(raw) !== JSON.stringify(normalizedCards);
+}
+
+async function replaceCards(cards) {
+  const db = await dbPromise;
+  const safeCards = walletCore.normalizeWalletCards(cards);
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_CARDS, "readwrite");
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+
+    const store = tx.objectStore(STORE_CARDS);
+    store.clear();
+    safeCards.forEach((card) => {
+      store.put(card);
+    });
   });
 }
 
