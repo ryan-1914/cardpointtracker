@@ -10,7 +10,7 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Baseline Comparison Hardening** - Lock down existing comparison behavior and baseline wallet flows as foundation
+- [x] **Phase 1: Baseline Comparison Hardening** - Lock down existing comparison behavior and baseline wallet flows as foundation (completed 2026-02-28)
 - [ ] **Phase 2: Catalog Discovery Experience** - Add built-in catalog browsing with name and issuer discovery
 - [ ] **Phase 3: Catalog-to-Wallet Integration** - Allow adding/removing catalog cards with duplicate prevention
 - [ ] **Phase 4: Card Type Rules & Editability** - Enforce read-only catalog cards while preserving editable custom cards
@@ -26,7 +26,7 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
   1. User can select any available category and see wallet cards ranked highest-to-lowest multiplier.
   2. User can clearly identify the best card recommendation for the selected category.
   3. Existing baseline comparison behavior remains stable after foundation refactors.
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Extract deterministic comparison core with regression tests
@@ -95,7 +95,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Baseline Comparison Hardening | 1/2 | In Progress|  |
+| 1. Baseline Comparison Hardening | 2/2 | Complete   | 2026-02-28 |
 | 2. Catalog Discovery Experience | 0/3 | Not started | - |
 | 3. Catalog-to-Wallet Integration | 0/3 | Not started | - |
 | 4. Card Type Rules & Editability | 0/3 | Not started | - |

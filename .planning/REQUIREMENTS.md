@@ -8,7 +8,7 @@
 ### Wallet Comparison
 
 - [x] **WAL-01**: User can select a purchase category and see all wallet cards ranked by multiplier (highest first)
-- [ ] **WAL-02**: User can clearly identify the top-ranked card for the selected category
+- [x] **WAL-02**: User can clearly identify the top-ranked card for the selected category
 - [ ] **WAL-03**: Ranking logic applies to both custom and catalog cards using the same category/fallback rules
 
 ### Custom Cards
@@ -54,7 +54,7 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | WAL-01 | Phase 1 | Complete |
-| WAL-02 | Phase 1 | Pending |
+| WAL-02 | Phase 1 | Complete |
 | WAL-03 | Phase 5 | Pending |
 | CUS-01 | Phase 4 | Pending |
 | CUS-02 | Phase 4 | Pending |
