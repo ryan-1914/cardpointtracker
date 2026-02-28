@@ -476,10 +476,11 @@ function renderCatalog() {
 
 function renderComparison() {
   const category = els.categoryPicker.value || "other";
-  const scored = comparisonCore.computeComparisonResults(state.cards, category);
+  const comparisonCards = walletCore.normalizeWalletCards(state.cards);
+  const scored = comparisonCore.computeComparisonResults(comparisonCards, category);
   els.result.classList.remove("result-callout", "result-empty");
 
-  if (state.cards.length === 0) {
+  if (comparisonCards.length === 0) {
     els.result.textContent = "Add at least one card to compare. Use the Add Card form below to get started.";
     els.result.classList.add("muted");
     els.result.classList.add("result-empty");

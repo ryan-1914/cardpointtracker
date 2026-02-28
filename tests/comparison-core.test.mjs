@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import comparisonCore from "../comparison-core.js";
+import walletCore from "../wallet-core.js";
 
 const { computeComparisonResults, formatMultiplier } = comparisonCore;
+const { createCatalogWalletCard, normalizeWalletCard } = walletCore;
 
 test("sorts by multiplier descending and name ascending for ties", () => {
   const cards = [
@@ -90,4 +92,58 @@ test("formats multipliers by trimming unnecessary trailing zeros", () => {
   assert.equal(formatMultiplier(2), "2x");
   assert.equal(formatMultiplier(1.5), "1.5x");
   assert.equal(formatMultiplier("2.0"), "2x");
+});
+
+test("mixed wallet ranking remains deterministic after custom create/edit/delete mutations", () => {
+  const catalogTravel = createCatalogWalletCard(
+    {
+      id: "capital-one-venture-x",
+      name: "Capital One Venture X",
+      issuer: "Capital One",
+      rewards: [{ category: "travel", multiplier: 2 }],
+    },
+    "2026-02-28T16:10:00.000Z",
+  );
+  const customAlpha = normalizeWalletCard({
+    id: "custom-alpha",
+    name: "Alpha Custom",
+    rewards: [{ category: "travel", multiplier: 3 }],
+  });
+  const customBeta = normalizeWalletCard({
+    id: "custom-beta",
+    name: "Beta Custom",
+    rewards: [{ category: "travel", multiplier: 4 }],
+  });
+  const customAlphaEdited = normalizeWalletCard({
+    id: "custom-alpha",
+    name: "Alpha Custom Plus",
+    rewards: [{ category: "travel", multiplier: 5 }],
+    createdAt: customAlpha?.createdAt,
+  });
+
+  const afterCreate = [catalogTravel, customAlpha, customBeta];
+  const afterEdit = afterCreate.map((card) => (card.id === customAlphaEdited?.id ? customAlphaEdited : card));
+  const afterDelete = afterEdit.filter((card) => card.id !== "custom-beta");
+  const catalogOnly = afterDelete.filter((card) => card.id !== "custom-alpha");
+
+  assert.deepEqual(
+    computeComparisonResults([catalogTravel, customAlpha], "travel").map((entry) => entry.card.name),
+    ["Alpha Custom", "Capital One Venture X"],
+  );
+  assert.deepEqual(
+    computeComparisonResults(afterCreate, "travel").map((entry) => entry.card.name),
+    ["Beta Custom", "Alpha Custom", "Capital One Venture X"],
+  );
+  assert.deepEqual(
+    computeComparisonResults(afterEdit, "travel").map((entry) => entry.card.name),
+    ["Alpha Custom Plus", "Beta Custom", "Capital One Venture X"],
+  );
+  assert.deepEqual(
+    computeComparisonResults(afterDelete, "travel").map((entry) => entry.card.name),
+    ["Alpha Custom Plus", "Capital One Venture X"],
+  );
+  assert.deepEqual(
+    computeComparisonResults(catalogOnly, "travel").map((entry) => entry.card.name),
+    ["Capital One Venture X"],
+  );
 });
