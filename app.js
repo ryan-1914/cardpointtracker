@@ -47,6 +47,7 @@ const els = {
 let dbPromise;
 let comparisonCore;
 let catalogCore;
+let walletCore;
 
 bootstrap();
 
@@ -54,6 +55,7 @@ async function bootstrap() {
   try {
     comparisonCore = await loadComparisonCore();
     catalogCore = await loadCatalogCore();
+    walletCore = await loadWalletCore();
     await init();
   } catch (error) {
     console.error(error);
@@ -65,7 +67,8 @@ async function init() {
   populateCategoryPickers();
   wireEvents();
   dbPromise = openDb();
-  state.cards = await readCards();
+  const storedCards = await readCards();
+  state.cards = walletCore.normalizeWalletCards(storedCards);
   state.catalogCards = catalogCore.buildCatalogCards();
   populateCatalogIssuerOptions();
   resetForm();
@@ -115,6 +118,27 @@ async function loadCatalogCore() {
   return globalThis.CardTrackerCatalogCore;
 }
 
+async function loadWalletCore() {
+  if (globalThis.CardTrackerWalletCore) {
+    return globalThis.CardTrackerWalletCore;
+  }
+
+  await new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "/wallet-core.js";
+    script.async = false;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load wallet-core.js"));
+    document.head.appendChild(script);
+  });
+
+  if (!globalThis.CardTrackerWalletCore) {
+    throw new Error("Wallet core unavailable after script load");
+  }
+
+  return globalThis.CardTrackerWalletCore;
+}
+
 function wireEvents() {
   els.addRewardRow.addEventListener("click", () => addRewardRow());
   els.cancelEdit.addEventListener("click", resetForm);
@@ -126,6 +150,15 @@ function wireEvents() {
   els.catalogIssuer?.addEventListener("change", (event) => {
     state.catalogIssuer = event.target.value || "all";
     renderCatalog();
+  });
+  els.catalogList?.addEventListener("click", async (event) => {
+    const addButton = event.target.closest("[data-catalog-add-id]");
+    if (!addButton) return;
+
+    const catalogCardId = addButton.getAttribute("data-catalog-add-id");
+    if (!catalogCardId) return;
+
+    await addCatalogCardToWallet(catalogCardId);
   });
   els.cardForm.addEventListener("submit", onSubmitCard);
   els.rewardRows.addEventListener("click", (event) => {
@@ -195,14 +228,18 @@ async function onSubmitCard(event) {
   }
 
   const editingCard = state.cards.find((card) => card.id === state.editingCardId);
-  const card = {
+  const card = walletCore.normalizeWalletCard({
     id: editingCard?.id || crypto.randomUUID(),
     name,
     issuer,
     rewards,
     createdAt: editingCard?.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  };
+    originType: editingCard?.originType,
+    origin: editingCard?.origin,
+    catalogCardId: editingCard?.catalogCardId,
+  });
+  if (!card) return;
 
   await saveCard(card);
   if (editingCard) {
@@ -212,6 +249,16 @@ async function onSubmitCard(event) {
   }
 
   resetForm();
+  render();
+}
+
+async function addCatalogCardToWallet(catalogCardId) {
+  const catalogCard = state.catalogCards.find((entry) => entry.id === catalogCardId);
+  if (!catalogCard) return;
+
+  const walletCard = walletCore.createCatalogWalletCard(catalogCard);
+  await saveCard(walletCard);
+  state.cards.push(walletCard);
   render();
 }
 
@@ -305,7 +352,7 @@ function renderCatalog() {
               <div class="card-title">${escapeHtml(card.name)}</div>
               <div class="issuer">${escapeHtml(card.issuer)}</div>
             </div>
-            <span class="catalog-readonly">Read-only</span>
+            <button class="catalog-add-btn" type="button" data-catalog-add-id="${escapeHtml(card.id)}">Add to Wallet</button>
           </div>
           <div class="tags">${tags}</div>
         </li>
