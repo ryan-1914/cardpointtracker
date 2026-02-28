@@ -8,7 +8,10 @@ const {
   createCatalogWalletCard,
   getCatalogMembership,
   getCatalogCardId,
+  getWalletOriginType,
   hasCatalogDuplicate,
+  isCatalogWalletCard,
+  isCustomWalletCard,
   normalizeRewardEntries,
   normalizeWalletCard,
   normalizeWalletCards,
@@ -111,6 +114,45 @@ test("normalizeWalletCards filters malformed entries and normalizes safe objects
   assert.equal(normalized.length, 1);
   assert.equal(normalized[0].originType, "custom");
   assert.deepEqual(normalized[0].rewards, [{ category: "travel", multiplier: 3 }]);
+});
+
+test("normalizeWalletCard migrates legacy cards without origin metadata to explicit custom origin", () => {
+  const normalized = normalizeWalletCard({
+    id: "legacy-custom-card",
+    name: "Legacy Custom",
+    issuer: "Legacy Bank",
+    rewards: [{ category: "other", multiplier: 1.5 }],
+    createdAt: "2026-02-01T00:00:00.000Z",
+    updatedAt: "2026-02-02T00:00:00.000Z",
+  });
+
+  assert.equal(normalized?.originType, "custom");
+  assert.equal(normalized?.origin?.type, "custom");
+  assert.equal(normalized?.catalogCardId, undefined);
+  assert.equal(isCustomWalletCard(normalized), true);
+  assert.equal(isCatalogWalletCard(normalized), false);
+});
+
+test("wallet origin helpers resolve deterministic catalog/custom semantics", () => {
+  const catalogCard = {
+    id: "catalog-amex-gold",
+    name: "American Express Gold",
+    rewards: [{ category: "dining", multiplier: 4 }],
+    catalogCardId: "amex-gold",
+  };
+  const customCard = {
+    id: "custom-local",
+    name: "Local CU Card",
+    rewards: [{ category: "gas", multiplier: 2 }],
+  };
+
+  assert.equal(getWalletOriginType(catalogCard), "catalog");
+  assert.equal(isCatalogWalletCard(catalogCard), true);
+  assert.equal(isCustomWalletCard(catalogCard), false);
+
+  assert.equal(getWalletOriginType(customCard), "custom");
+  assert.equal(isCatalogWalletCard(customCard), false);
+  assert.equal(isCustomWalletCard(customCard), true);
 });
 
 test("hasCatalogDuplicate matches by catalog identity even with persisted shape variants", () => {

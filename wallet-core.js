@@ -61,8 +61,41 @@
     return text || fallback;
   }
 
+  function normalizeOriginType(value) {
+    const type = String(value || "").trim().toLowerCase();
+    if (type === ORIGIN_CATALOG) return ORIGIN_CATALOG;
+    return ORIGIN_CUSTOM;
+  }
+
   function toCatalogWalletId(catalogCardId) {
     return `catalog-${catalogCardId}`;
+  }
+
+  function getWalletOriginType(walletCard) {
+    if (!walletCard || typeof walletCard !== "object") {
+      return ORIGIN_CUSTOM;
+    }
+
+    const explicitType = String(walletCard.originType || walletCard.origin?.type || "")
+      .trim()
+      .toLowerCase();
+    if (explicitType === ORIGIN_CATALOG) {
+      return ORIGIN_CATALOG;
+    }
+    if (explicitType === ORIGIN_CUSTOM) {
+      return ORIGIN_CUSTOM;
+    }
+
+    const catalogCardId = String(walletCard.catalogCardId || walletCard.origin?.catalogCardId || "").trim();
+    return catalogCardId ? ORIGIN_CATALOG : ORIGIN_CUSTOM;
+  }
+
+  function isCatalogWalletCard(walletCard) {
+    return getWalletOriginType(walletCard) === ORIGIN_CATALOG;
+  }
+
+  function isCustomWalletCard(walletCard) {
+    return getWalletOriginType(walletCard) === ORIGIN_CUSTOM;
   }
 
   function createCatalogWalletCard(catalogCard, timestamp) {
@@ -96,9 +129,9 @@
     const rewards = normalizeRewardEntries(card.rewards);
     if (rewards.length === 0) return null;
 
-    const cardOriginType = String(card.originType || card.origin?.type || "").trim().toLowerCase();
     const catalogCardId = String(card.catalogCardId || card.origin?.catalogCardId || "").trim();
-    const isCatalog = cardOriginType === ORIGIN_CATALOG || Boolean(catalogCardId);
+    const originType = getWalletOriginType(card);
+    const isCatalog = originType === ORIGIN_CATALOG;
 
     const createdAt = normalizeTimestamp(card.createdAt, now);
     const updatedAt = normalizeTimestamp(card.updatedAt, createdAt);
@@ -128,13 +161,13 @@
       name: sanitizeText(card.name, "Unnamed Card"),
       issuer: sanitizeText(card.issuer, "Unknown"),
       rewards,
-      createdAt,
-      updatedAt,
-      originType: ORIGIN_CUSTOM,
-      origin: {
-        type: ORIGIN_CUSTOM,
-      },
-    };
+        createdAt,
+        updatedAt,
+        originType: normalizeOriginType(originType),
+        origin: {
+          type: ORIGIN_CUSTOM,
+        },
+      };
   }
 
   function normalizeWalletCards(cards) {
@@ -149,11 +182,7 @@
     const directId = String(walletCard.catalogCardId || "").trim();
     if (directId) return directId;
 
-    const originType = String(walletCard.originType || walletCard.origin?.type || "")
-      .trim()
-      .toLowerCase();
-
-    if (originType !== ORIGIN_CATALOG) return "";
+    if (!isCatalogWalletCard(walletCard)) return "";
 
     const originCatalogId = String(walletCard.origin?.catalogCardId || "").trim();
     if (originCatalogId) return originCatalogId;
@@ -207,6 +236,9 @@
   return {
     ORIGIN_CATALOG,
     ORIGIN_CUSTOM,
+    getWalletOriginType,
+    isCatalogWalletCard,
+    isCustomWalletCard,
     normalizeRewardEntries,
     createCatalogWalletCard,
     normalizeWalletCard,
