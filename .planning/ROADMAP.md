@@ -19,28 +19,28 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
 ## Phase Details
 
 ### Phase 1: Baseline Comparison Hardening
-**Goal**: Ensure baseline ranking UI and top-card feedback stay correct while architecture evolves for catalog support.
-**Depends on**: Nothing (first phase)
-**Requirements**: [WAL-01, WAL-02]
+**Goal:** Ensure baseline ranking UI and top-card feedback stay correct while architecture evolves for catalog support.
+**Depends on:** Nothing (first phase)
+**Requirements:** [WAL-01, WAL-02]
 **Success Criteria** (what must be TRUE):
   1. User can select any available category and see wallet cards ranked highest-to-lowest multiplier.
   2. User can clearly identify the best card recommendation for the selected category.
   3. Existing baseline comparison behavior remains stable after foundation refactors.
-**Plans**: 2 plans
+**Plans:** 2 plans
 
 Plans:
 - [ ] 01-01: Extract and stabilize comparison/ranking logic with regression-focused checks
 - [ ] 01-02: Align main screen presentation for consistent top-card visibility and messaging
 
 ### Phase 2: Catalog Discovery Experience
-**Goal**: Introduce a built-in catalog that users can browse and discover cards by name and issuer.
-**Depends on**: Phase 1
-**Requirements**: [CAT-01, CAT-02, CAT-03]
+**Goal:** Introduce a built-in catalog that users can browse and discover cards by name and issuer.
+**Depends on:** Phase 1
+**Requirements:** [CAT-01, CAT-02, CAT-03]
 **Success Criteria** (what must be TRUE):
   1. User can open a catalog flow and see popular cards with predefined multipliers.
   2. User can search catalog by card name and quickly narrow results.
   3. User can filter catalog by issuer and combine it with search.
-**Plans**: 3 plans
+**Plans:** 3 plans
 
 Plans:
 - [ ] 02-01: Add static catalog dataset and normalization model for predefined rewards
@@ -48,14 +48,14 @@ Plans:
 - [ ] 02-03: Add issuer filtering controls and empty-state handling
 
 ### Phase 3: Catalog-to-Wallet Integration
-**Goal**: Connect catalog selection to wallet state with integrity constraints.
-**Depends on**: Phase 2
-**Requirements**: [CAT-04, CAT-05, CAT-07]
+**Goal:** Connect catalog selection to wallet state with integrity constraints.
+**Depends on:** Phase 2
+**Requirements:** [CAT-04, CAT-05, CAT-07]
 **Success Criteria** (what must be TRUE):
   1. User can add a catalog card to wallet and immediately see it in wallet list and ranking.
   2. User cannot add the same catalog card more than once.
   3. User can remove a previously added catalog card from wallet.
-**Plans**: 3 plans
+**Plans:** 3 plans
 
 Plans:
 - [ ] 03-01: Implement add-from-catalog action and wallet persistence for catalog card origin
@@ -63,14 +63,14 @@ Plans:
 - [ ] 03-03: Support delete flow parity for catalog-sourced wallet entries
 
 ### Phase 4: Card Type Rules & Editability
-**Goal**: Define wallet behaviors by card origin so catalog cards are immutable and custom cards remain user-managed.
-**Depends on**: Phase 3
-**Requirements**: [CAT-06, CUS-01, CUS-02, CUS-03]
+**Goal:** Define wallet behaviors by card origin so catalog cards are immutable and custom cards remain user-managed.
+**Depends on:** Phase 3
+**Requirements:** [CAT-06, CUS-01, CUS-02, CUS-03]
 **Success Criteria** (what must be TRUE):
   1. User can create custom cards manually with reward multipliers.
   2. User can edit custom cards but cannot edit catalog cards.
   3. User can delete custom cards from wallet without affecting catalog definitions.
-**Plans**: 3 plans
+**Plans:** 3 plans
 
 Plans:
 - [ ] 04-01: Introduce explicit card-origin/type model in wallet entities
@@ -78,14 +78,14 @@ Plans:
 - [ ] 04-03: Preserve custom create/edit/delete workflows alongside catalog workflows
 
 ### Phase 5: Mixed Wallet UX Validation
-**Goal**: Validate the complete dual-source wallet experience for general users and ensure mixed ranking accuracy.
-**Depends on**: Phase 4
-**Requirements**: [WAL-03]
+**Goal:** Validate the complete dual-source wallet experience for general users and ensure mixed ranking accuracy.
+**Depends on:** Phase 4
+**Requirements:** [WAL-03]
 **Success Criteria** (what must be TRUE):
   1. Ranking logic treats catalog and custom cards consistently for the same category.
   2. Main screen experience remains fast and understandable with mixed wallet composition.
   3. Key edge cases (empty wallet, single card, catalog-only, custom-only, mixed) behave correctly.
-**Plans**: 2 plans
+**Plans:** 2 plans
 
 Plans:
 - [ ] 05-01: Validate mixed-wallet ranking and fallback behavior across edge cases
