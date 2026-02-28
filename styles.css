@@ -269,10 +269,20 @@ button.ghost {
   gap: 0.5rem;
 }
 
+.card-item.card-source-catalog {
+  border-left: 4px solid #d6e8f4;
+}
+
+.card-item.card-source-catalog.is-readonly {
+  background: #f8fbfd;
+  border-color: #d6e8f4;
+}
+
 .card-actions {
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .card-title {
@@ -300,6 +310,30 @@ button.ghost {
   font-weight: 650;
   letter-spacing: 0.02em;
   padding: 0.12rem 0.46rem;
+  text-transform: uppercase;
+}
+
+.card-source-badge.card-source-custom {
+  border-color: #d7e8e2;
+  background: #f2f9f6;
+  color: #2f645a;
+}
+
+.card-source-badge.card-source-catalog {
+  border-color: #c8dcef;
+  background: #eef5fc;
+  color: #2f5270;
+}
+
+.card-readonly-badge.is-readonly {
+  border-radius: 999px;
+  border: 1px solid #cbd8e6;
+  background: #eef3f8;
+  color: #36526e;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  padding: 0.16rem 0.48rem;
   text-transform: uppercase;
 }
 
@@ -344,6 +378,11 @@ button.ghost {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.wallet-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.86rem;
 }
 
 @media (max-width: 640px) {

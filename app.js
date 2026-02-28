@@ -377,14 +377,21 @@ function renderCards() {
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((card) => {
+      const originType = walletCore.getWalletOriginType(card);
+      const canEdit = walletCore.canEditWalletCard(card);
       const tags = card.rewards
         .map((reward) => formatRewardTag(reward))
         .join("");
-      const sourceBadge = card.originType === walletCore.ORIGIN_CATALOG
-        ? `<span class="card-source-badge">Catalog</span>`
+      const sourceLabel = originType === walletCore.ORIGIN_CATALOG ? "Catalog" : "Custom";
+      const sourceBadge = `<span class="card-source-badge card-source card-source-${originType}">${sourceLabel}</span>`;
+      const readonlyBadge = canEdit
+        ? ""
+        : `<span class="card-readonly-badge is-readonly">Read only</span>`;
+      const editButton = canEdit
+        ? `<button class="secondary" data-edit-id="${card.id}" aria-label="Edit ${escapeHtml(card.name)}">Edit</button>`
         : "";
       return `
-        <li>
+        <li class="card-item card-source-${originType} ${canEdit ? "" : "is-readonly"}">
           <div class="card-header">
             <div>
               <div class="card-title">${escapeHtml(card.name)}</div>
@@ -394,7 +401,8 @@ function renderCards() {
               </div>
             </div>
             <div class="card-actions">
-              <button class="secondary" data-edit-id="${card.id}" aria-label="Edit ${escapeHtml(card.name)}">Edit</button>
+              ${readonlyBadge}
+              ${editButton}
               <button class="ghost" data-delete-id="${card.id}" aria-label="Delete ${escapeHtml(card.name)}">Delete</button>
             </div>
           </div>
