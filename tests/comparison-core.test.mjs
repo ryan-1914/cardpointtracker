@@ -63,6 +63,56 @@ test("uses other fallback and excludes non-qualifying cards", () => {
   );
 });
 
+test("uses legacy travel_portal fallback for split portal categories", () => {
+  const cards = [
+    {
+      name: "Legacy Portal Card",
+      rewards: [{ category: "travel_portal", multiplier: 5 }],
+    },
+    {
+      name: "Specific Portal Card",
+      rewards: [{ category: "travel_portal_flights", multiplier: 4 }],
+    },
+  ];
+
+  const results = computeComparisonResults(cards, "travel_portal_flights");
+  assert.deepEqual(
+    results.map((entry) => ({
+      name: entry.card.name,
+      source: entry.source,
+      multiplier: entry.multiplier,
+    })),
+    [
+      { name: "Legacy Portal Card", source: "travel portal fallback", multiplier: 5 },
+      { name: "Specific Portal Card", source: "category match", multiplier: 4 },
+    ],
+  );
+});
+
+test("derives travel_portal score from split portal categories when needed", () => {
+  const cards = [
+    {
+      name: "Split Portal Card",
+      rewards: [
+        { category: "travel_portal_flights", multiplier: 5 },
+        { category: "travel_portal_hotels", multiplier: 10 },
+      ],
+    },
+  ];
+
+  const results = computeComparisonResults(cards, "travel_portal");
+  assert.deepEqual(
+    results.map((entry) => ({
+      name: entry.card.name,
+      source: entry.source,
+      multiplier: entry.multiplier,
+    })),
+    [
+      { name: "Split Portal Card", source: "travel portal derived", multiplier: 10 },
+    ],
+  );
+});
+
 test("produces deterministic order for identical input", () => {
   const cards = [
     {

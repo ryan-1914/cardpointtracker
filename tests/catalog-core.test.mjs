@@ -182,8 +182,10 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   assert.deepEqual(ventureX.rewards, [
     { category: "other", multiplier: 2 },
     { category: "travel", multiplier: 2 },
-    { category: "travel_portal", multiplier: 5 },
-    { category: "travel_portal_hotels_cars", multiplier: 10 },
+    { category: "travel_portal_car_rentals", multiplier: 10 },
+    { category: "travel_portal_flights", multiplier: 5 },
+    { category: "travel_portal_hotels", multiplier: 10 },
+    { category: "travel_portal_vacation_rentals", multiplier: 5 },
   ]);
 
   const strataPremier = byName.get("Citi Strata Premier");

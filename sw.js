@@ -1,4 +1,4 @@
-const CACHE_NAME = "cardtracker-v24";
+const CACHE_NAME = "cardtracker-v25";
 const APP_SHELL = [
   "./",
   "./index.html",

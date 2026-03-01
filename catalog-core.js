@@ -74,8 +74,10 @@
       network: "Visa",
       rewards: {
         travel: 2,
-        travel_portal: 5,
-        travel_portal_hotels_cars: 10,
+        travel_portal_flights: 5,
+        travel_portal_vacation_rentals: 5,
+        travel_portal_hotels: 10,
+        travel_portal_car_rentals: 10,
         other: 2,
       },
     },
