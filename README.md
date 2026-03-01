@@ -20,6 +20,8 @@ python3 -m http.server 8080
 
 Then open [http://localhost:8080](http://localhost:8080).
 
+Deployment note: this app currently uses root-absolute asset paths, so host it at domain root (`/`) unless paths are updated.
+
 ## Data model (current)
 
 - Card name
