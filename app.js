@@ -107,7 +107,7 @@ async function loadComparisonCore() {
 
   await new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = "/comparison-core.js";
+    script.src = "./comparison-core.js";
     script.async = false;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error("Failed to load comparison-core.js"));
@@ -128,7 +128,7 @@ async function loadCatalogCore() {
 
   await new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = "/catalog-core.js";
+    script.src = "./catalog-core.js";
     script.async = false;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error("Failed to load catalog-core.js"));
@@ -149,7 +149,7 @@ async function loadWalletCore() {
 
   await new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = "/wallet-core.js";
+    script.src = "./wallet-core.js";
     script.async = false;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error("Failed to load wallet-core.js"));
