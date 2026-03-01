@@ -1,14 +1,14 @@
-const CACHE_NAME = "cardtracker-v23";
+const CACHE_NAME = "cardtracker-v24";
 const APP_SHELL = [
-  "/",
-  "/index.html",
-  "/styles.css",
-  "/app.js",
-  "/catalog-core.js",
-  "/comparison-core.js",
-  "/wallet-core.js",
-  "/manifest.webmanifest",
-  "/assets/icon.svg",
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./app.js",
+  "./catalog-core.js",
+  "./comparison-core.js",
+  "./wallet-core.js",
+  "./manifest.webmanifest",
+  "./assets/icon.svg",
 ];
 
 self.addEventListener("install", (event) => {
@@ -36,11 +36,11 @@ self.addEventListener("fetch", (event) => {
         .then((response) => {
           if (response && response.status === 200 && response.type === "basic") {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+            caches.open(CACHE_NAME).then((cache) => cache.put("index.html", copy));
           }
           return response;
         })
-        .catch(() => caches.match("/index.html")),
+        .catch(() => caches.match("index.html")),
     );
     return;
   }

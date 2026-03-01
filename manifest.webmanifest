@@ -2,14 +2,14 @@
   "name": "CardTracker",
   "short_name": "CardTracker",
   "description": "Track your credit cards and quickly choose the highest reward multiplier by category.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "theme_color": "#11363f",
   "background_color": "#edf5ef",
   "icons": [
     {
-      "src": "/assets/icon.svg",
+      "src": "assets/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
