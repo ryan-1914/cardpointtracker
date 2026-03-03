@@ -86,10 +86,13 @@
       issuer: "Capital One",
       network: "Mastercard",
       rewards: {
+        travel_portal_vacation_rentals: 5,
+        travel_portal_hotels: 5,
+        travel_portal_car_rentals: 5,
         dining: 3,
         groceries: 3,
+        entertainment: 3,
         streaming: 3,
-        online: 3,
         other: 1,
       },
     },
@@ -372,6 +375,11 @@
     { name: "Wells Fargo Autograph", issuer: "Wells Fargo", network: "Visa", link: "https://creditcards.wellsfargo.com/autograph-visa-credit-card/" },
     { name: "Wells Fargo Autograph Journey", issuer: "Wells Fargo", network: "Visa", link: "https://creditcards.wellsfargo.com/autograph-journey-visa-credit-card/" },
     { name: "Wells Fargo Reflect", issuer: "Wells Fargo", network: "Visa", link: "https://creditcards.wellsfargo.com/reflect-visa-credit-card/" },
+
+    // =========================
+    // Fidelity
+    // =========================
+    { name: "Fidelity Rewards Visa Signature Card", issuer: "Fidelity", network: "Visa", link: "https://www.fidelity.com/spend-save/visa-signature-card" },
 
     // =========================
     // U.S. Bank
@@ -717,6 +725,9 @@
       online: 6,
       streaming: 3,
       other: 1,
+    },
+    "fidelity|fidelity rewards visa signature card": {
+      other: 2,
     },
     "u.s. bank|u.s. bank visa platinum": {
       other: 1,

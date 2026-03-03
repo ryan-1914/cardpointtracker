@@ -188,6 +188,19 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "travel_portal_vacation_rentals", multiplier: 5 },
   ]);
 
+  const savor = byName.get("Capital One Savor");
+  assert.ok(savor);
+  assert.deepEqual(savor.rewards, [
+    { category: "dining", multiplier: 3 },
+    { category: "entertainment", multiplier: 3 },
+    { category: "groceries", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "streaming", multiplier: 3 },
+    { category: "travel_portal_car_rentals", multiplier: 5 },
+    { category: "travel_portal_hotels", multiplier: 5 },
+    { category: "travel_portal_vacation_rentals", multiplier: 5 },
+  ]);
+
   const strataPremier = byName.get("Citi Strata Premier");
   assert.ok(strataPremier);
   assert.deepEqual(strataPremier.rewards, [
@@ -260,6 +273,10 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   const usBankPlatinum = byName.get("U.S. Bank Visa Platinum");
   assert.ok(usBankPlatinum);
   assert.deepEqual(usBankPlatinum.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const fidelityRewardsVisa = byName.get("Fidelity Rewards Visa Signature Card");
+  assert.ok(fidelityRewardsVisa);
+  assert.deepEqual(fidelityRewardsVisa.rewards, [{ category: "other", multiplier: 2 }]);
 
   const reflect = byName.get("Wells Fargo Reflect");
   assert.ok(reflect);
