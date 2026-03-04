@@ -102,6 +102,7 @@
       network: "Mastercard",
       rewards: {
         other: 2,
+        travel_portal: 5,
       },
     },
     {
@@ -129,6 +130,7 @@
         dining: 3,
         gas: 3,
         streaming: 3,
+        phone_plans: 3,
         other: 1,
       },
     },
@@ -138,9 +140,8 @@
       network: "Discover",
       rewards: {
         groceries: 5,
-        gas: 5,
-        online: 5,
-        dining: 5,
+        wholesale_clubs: 5,
+        streaming: 5,
         other: 1,
       },
     },
@@ -164,6 +165,7 @@
         dining: 4,
         groceries: 2,
         gas: 2,
+        ev_charging: 2,
         streaming: 2,
         other: 1,
       },
@@ -173,7 +175,7 @@
       issuer: "Chase",
       network: "Mastercard",
       rewards: {
-        dining: 3,
+        dining: 5,
         drugstore: 3,
         travel_portal: 5,
         other: 1,
@@ -389,6 +391,7 @@
     { name: "U.S. Bank Cash+", issuer: "U.S. Bank", network: "Visa", link: "https://www.usbank.com/credit-cards/cash-plus-visa-signature-credit-card.html" },
     { name: "U.S. Bank Shopper Cash Rewards", issuer: "U.S. Bank", network: "Visa", link: "https://www.usbank.com/credit-cards/shopper-cash-rewards-visa-signature-credit-card.html" },
     { name: "U.S. Bank Visa Platinum", issuer: "U.S. Bank", network: "Visa", link: "https://www.usbank.com/credit-cards/visa-platinum-credit-card.html" },
+    { name: "U.S. Bank Smartly Visa Signature", issuer: "U.S. Bank", network: "Visa", link: "https://www.usbank.com/credit-cards/bank-smartly-visa-signature-credit-card.html" },
 
     // =========================
     // Barclays
@@ -568,11 +571,14 @@
       other: 1,
     },
     "citi|citi strata": {
-      travel: 3,
-      travel_portal: 10,
-      dining: 3,
+      travel_portal_hotels: 5,
+      travel_portal_car_rentals: 5,
+      travel_portal_attractions: 5,
+      dining: 2,
       groceries: 3,
       gas: 3,
+      ev_charging: 3,
+      transit: 3,
       other: 1,
     },
     "citi|citi strata elite": {
@@ -601,9 +607,8 @@
     },
     "discover|discover it student cash back": {
       groceries: 5,
-      gas: 5,
-      online: 5,
-      dining: 5,
+      wholesale_clubs: 5,
+      streaming: 5,
       other: 1,
     },
     "synchrony|paypal cashback mastercard": {
@@ -731,6 +736,9 @@
     },
     "u.s. bank|u.s. bank visa platinum": {
       other: 1,
+    },
+    "u.s. bank|u.s. bank smartly visa signature": {
+      other: 2,
     },
     "wells fargo|wells fargo reflect": {
       other: 1,

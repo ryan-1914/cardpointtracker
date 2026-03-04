@@ -159,6 +159,17 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   const cards = buildCatalogCards();
   const byName = new Map(cards.map((card) => [card.name, card]));
 
+  const altitudeGo = byName.get("U.S. Bank Altitude Go");
+  assert.ok(altitudeGo);
+  assert.deepEqual(altitudeGo.rewards, [
+    { category: "dining", multiplier: 4 },
+    { category: "ev_charging", multiplier: 2 },
+    { category: "gas", multiplier: 2 },
+    { category: "groceries", multiplier: 2 },
+    { category: "other", multiplier: 1 },
+    { category: "streaming", multiplier: 2 },
+  ]);
+
   const amazonVisa = byName.get("Amazon Visa");
   assert.ok(amazonVisa);
   assert.deepEqual(amazonVisa.rewards, [
@@ -174,6 +185,13 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   assert.deepEqual(ventureRewards.rewards, [
     { category: "other", multiplier: 2 },
     { category: "travel", multiplier: 2 },
+    { category: "travel_portal", multiplier: 5 },
+  ]);
+
+  const doubleCash = byName.get("Citi Double Cash");
+  assert.ok(doubleCash);
+  assert.deepEqual(doubleCash.rewards, [
+    { category: "other", multiplier: 2 },
     { category: "travel_portal", multiplier: 5 },
   ]);
 
@@ -212,6 +230,20 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "travel_portal", multiplier: 10 },
   ]);
 
+  const strata = byName.get("Citi Strata");
+  assert.ok(strata);
+  assert.deepEqual(strata.rewards, [
+    { category: "dining", multiplier: 2 },
+    { category: "ev_charging", multiplier: 3 },
+    { category: "gas", multiplier: 3 },
+    { category: "groceries", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "transit", multiplier: 3 },
+    { category: "travel_portal_attractions", multiplier: 5 },
+    { category: "travel_portal_car_rentals", multiplier: 5 },
+    { category: "travel_portal_hotels", multiplier: 5 },
+  ]);
+
   const freedomUnlimited = byName.get("Chase Freedom Unlimited");
   assert.ok(freedomUnlimited);
   assert.deepEqual(freedomUnlimited.rewards, [
@@ -219,6 +251,27 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "drugstore", multiplier: 3 },
     { category: "other", multiplier: 1.5 },
     { category: "travel_portal", multiplier: 5 },
+  ]);
+
+  const freedomFlex = byName.get("Chase Freedom Flex");
+  assert.ok(freedomFlex);
+  assert.deepEqual(freedomFlex.rewards, [
+    { category: "dining", multiplier: 5 },
+    { category: "drugstore", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "travel_portal", multiplier: 5 },
+  ]);
+
+  const autograph = byName.get("Wells Fargo Autograph");
+  assert.ok(autograph);
+  assert.deepEqual(autograph.rewards, [
+    { category: "dining", multiplier: 3 },
+    { category: "gas", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+    { category: "phone_plans", multiplier: 3 },
+    { category: "streaming", multiplier: 3 },
+    { category: "transit", multiplier: 3 },
+    { category: "travel", multiplier: 3 },
   ]);
 
   const unitedClub = byName.get("United Club Card");
@@ -273,6 +326,10 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   const usBankPlatinum = byName.get("U.S. Bank Visa Platinum");
   assert.ok(usBankPlatinum);
   assert.deepEqual(usBankPlatinum.rewards, [{ category: "other", multiplier: 1 }]);
+
+  const usBankSmartly = byName.get("U.S. Bank Smartly Visa Signature");
+  assert.ok(usBankSmartly);
+  assert.deepEqual(usBankSmartly.rewards, [{ category: "other", multiplier: 2 }]);
 
   const fidelityRewardsVisa = byName.get("Fidelity Rewards Visa Signature Card");
   assert.ok(fidelityRewardsVisa);
