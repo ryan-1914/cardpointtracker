@@ -1,29 +1,14 @@
 const CATEGORIES = [
   { id: "dining", label: "Dining / Restaurants" },
   { id: "entertainment", label: "Entertainment" },
-  { id: "live_entertainment", label: "Live Entertainment" },
-  { id: "fitness", label: "Fitness / Gyms" },
   { id: "groceries", label: "Groceries" },
   { id: "gas", label: "Gas" },
   { id: "ev_charging", label: "EV Charging" },
-  { id: "home_improvement", label: "Home Improvement" },
   { id: "utilities", label: "Utilities" },
   { id: "phone_plans", label: "Phone Plans / Telecom" },
   { id: "wholesale_clubs", label: "Wholesale Clubs" },
-  { id: "department_stores", label: "Department Stores" },
-  { id: "electronics", label: "Electronics" },
-  { id: "furniture", label: "Furniture" },
-  { id: "clothing", label: "Clothing" },
-  { id: "sporting_goods", label: "Sporting Goods" },
   { id: "travel", label: "Travel" },
-  { id: "travel_portal_flights", label: "Travel (Portal Flights)" },
-  { id: "travel_portal_vacation_rentals", label: "Travel (Portal Vacation Rentals)" },
-  { id: "travel_portal_hotels", label: "Travel (Portal Hotels)" },
-  { id: "travel_portal_car_rentals", label: "Travel (Portal Car Rentals)" },
-  { id: "travel_portal", label: "Travel (Portal Any)" },
   { id: "transit", label: "Transit" },
-  { id: "parking_tolls", label: "Parking & Tolls" },
-  { id: "rideshare", label: "Rideshare" },
   { id: "streaming", label: "Streaming Services" },
   { id: "online", label: "Online Shopping" },
   { id: "drugstore", label: "Drugstores" },
@@ -201,7 +186,10 @@ function wireEvents() {
     }
   });
   els.cardList.addEventListener("click", async (event) => {
-    const editId = event.target.getAttribute("data-edit-id");
+    if (!(event.target instanceof Element)) return;
+
+    const editButton = event.target.closest("[data-edit-id]");
+    const editId = editButton?.getAttribute("data-edit-id");
     if (editId) {
       const cardToEdit = state.cards.find((card) => card.id === editId);
       if (!walletCore.canEditWalletCard(cardToEdit)) {
@@ -213,7 +201,8 @@ function wireEvents() {
       return;
     }
 
-    const deleteId = event.target.getAttribute("data-delete-id");
+    const deleteButton = event.target.closest("[data-delete-id]");
+    const deleteId = deleteButton?.getAttribute("data-delete-id");
     if (!deleteId) return;
 
     const deletedCard = state.cards.find((card) => card.id === deleteId);
@@ -480,9 +469,6 @@ function renderCatalog() {
       const addButtonAttrs = isAdded || !hasRewards
         ? `class="${addButtonClass}" type="button" disabled aria-disabled="true"`
         : `class="${addButtonClass}" type="button" data-catalog-add-id="${escapeHtml(card.id)}"`;
-      const detailsLink = card.link
-        ? `<a class="catalog-link" href="${escapeHtml(card.link)}" target="_blank" rel="noopener noreferrer">Official</a>`
-        : "";
       const feedback = state.catalogFeedbackById[card.id];
       const feedbackMarkup = feedback
         ? `<p class="catalog-feedback ${feedback.type ? `is-${escapeHtml(feedback.type)}` : ""}">${escapeHtml(feedback.message)}</p>`
@@ -498,7 +484,6 @@ function renderCatalog() {
               <div class="issuer">${escapeHtml(formatIssuerAndNetwork(card, "Unknown"))}</div>
             </div>
             <div class="catalog-actions">
-              ${detailsLink}
               <button ${addButtonAttrs}>${addButtonLabel}</button>
             </div>
           </div>
@@ -602,6 +587,11 @@ function startEdit(cardId) {
   if (card.rewards.length === 0) {
     addRewardRow();
   }
+
+  // Make edit mode obvious when the form is below the current viewport.
+  els.cardForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  els.cardName.focus();
+  els.cardName.select();
 }
 
 function openDb() {

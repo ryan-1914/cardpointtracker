@@ -213,17 +213,6 @@ button.ghost {
   flex-wrap: wrap;
 }
 
-.catalog-link {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #2e5f84;
-  text-decoration: none;
-}
-
-.catalog-link:hover {
-  text-decoration: underline;
-}
-
 .catalog-add-btn.catalog-add-status {
   min-width: 8.2rem;
   text-align: center;

@@ -63,19 +63,19 @@ test("uses other fallback and excludes non-qualifying cards", () => {
   );
 });
 
-test("uses legacy travel_portal fallback for split portal categories", () => {
+test("uses direct category matches before fallback for non-specialized categories", () => {
   const cards = [
     {
-      name: "Legacy Portal Card",
-      rewards: [{ category: "travel_portal", multiplier: 5 }],
+      name: "Direct Match",
+      rewards: [{ category: "travel", multiplier: 5 }],
     },
     {
-      name: "Specific Portal Card",
-      rewards: [{ category: "travel_portal_flights", multiplier: 4 }],
+      name: "Fallback Card",
+      rewards: [{ category: "other", multiplier: 4 }],
     },
   ];
 
-  const results = computeComparisonResults(cards, "travel_portal_flights");
+  const results = computeComparisonResults(cards, "travel");
   assert.deepEqual(
     results.map((entry) => ({
       name: entry.card.name,
@@ -83,24 +83,21 @@ test("uses legacy travel_portal fallback for split portal categories", () => {
       multiplier: entry.multiplier,
     })),
     [
-      { name: "Legacy Portal Card", source: "travel portal fallback", multiplier: 5 },
-      { name: "Specific Portal Card", source: "category match", multiplier: 4 },
+      { name: "Direct Match", source: "category match", multiplier: 5 },
+      { name: "Fallback Card", source: "other fallback", multiplier: 4 },
     ],
   );
 });
 
-test("derives travel_portal score from split portal categories when needed", () => {
+test("treats unknown categories like any other non-match", () => {
   const cards = [
     {
-      name: "Split Portal Card",
-      rewards: [
-        { category: "travel_portal_flights", multiplier: 5 },
-        { category: "travel_portal_hotels", multiplier: 10 },
-      ],
+      name: "Fallback Card",
+      rewards: [{ category: "other", multiplier: 2 }],
     },
   ];
 
-  const results = computeComparisonResults(cards, "travel_portal");
+  const results = computeComparisonResults(cards, "legacy_portal");
   assert.deepEqual(
     results.map((entry) => ({
       name: entry.card.name,
@@ -108,7 +105,7 @@ test("derives travel_portal score from split portal categories when needed", () 
       multiplier: entry.multiplier,
     })),
     [
-      { name: "Split Portal Card", source: "travel portal derived", multiplier: 10 },
+      { name: "Fallback Card", source: "other fallback", multiplier: 2 },
     ],
   );
 });

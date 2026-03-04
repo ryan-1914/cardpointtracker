@@ -1,4 +1,4 @@
-# CardTracker (PWA MVP)
+# Card Reward Tracker (PWA MVP)
 
 Local-first progressive web app for tracking credit card category multipliers and quickly finding the best card for a purchase type.
 

@@ -1,6 +1,6 @@
 {
-  "name": "CardTracker",
-  "short_name": "CardTracker",
+  "name": "Card Reward Tracker",
+  "short_name": "Card Rewards",
   "description": "Track your credit cards and quickly choose the highest reward multiplier by category.",
   "start_url": "./",
   "scope": "./",

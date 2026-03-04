@@ -4,8 +4,6 @@ import assert from "node:assert/strict";
 import catalogCore from "../catalog-core.js";
 
 const {
-  CATALOG_SEED,
-  CATALOG_REFERENCE_SEED,
   buildCatalogCards,
   normalizeCatalogCard,
   normalizeRewardEntries,
@@ -13,15 +11,29 @@ const {
   filterCatalogCards,
 } = catalogCore;
 
-test("buildCatalogCards returns normalized fixed catalog entries", () => {
-  const cards = buildCatalogCards();
-  assert.ok(cards.length > CATALOG_SEED.length);
-  assert.ok(cards.length <= CATALOG_SEED.length + CATALOG_REFERENCE_SEED.length);
+const EXPECTED_CATALOG_NAMES = [
+  "Blue Cash Preferred",
+  "Capital One Quicksilver",
+  "Capital One Savor",
+  "Capital One Venture X",
+  "Chase Freedom Flex",
+  "Chase Freedom Unlimited",
+  "Citi Double Cash",
+  "Citi Strata",
+  "Discover it Cash Back",
+  "Fidelity Rewards Visa Signature Card",
+  "U.S. Bank Altitude Go",
+  "U.S. Bank Smartly Visa Signature",
+  "Wells Fargo Autograph",
+];
 
-  const withRewards = cards.filter((card) => card.rewards.length > 0);
-  const withoutRewards = cards.filter((card) => card.rewards.length === 0);
-  assert.ok(withRewards.length >= CATALOG_SEED.length);
-  assert.equal(withoutRewards.length, 0);
+test("buildCatalogCards returns normalized entries for the curated catalog", () => {
+  const cards = buildCatalogCards();
+  assert.equal(cards.length, EXPECTED_CATALOG_NAMES.length);
+  assert.deepEqual(
+    cards.map((card) => card.name).sort((left, right) => left.localeCompare(right)),
+    EXPECTED_CATALOG_NAMES,
+  );
 
   cards.forEach((card) => {
     assert.ok(card.id);
@@ -29,10 +41,6 @@ test("buildCatalogCards returns normalized fixed catalog entries", () => {
     assert.ok(card.issuer);
     assert.ok(card.network);
     assert.ok(Array.isArray(card.rewards));
-    assert.ok(typeof card.link === "string");
-    if (card.link) {
-      assert.ok(card.link.startsWith("https://") || card.link.startsWith("http://"));
-    }
 
     card.rewards.forEach((reward) => {
       assert.ok(reward.category);
@@ -64,7 +72,6 @@ test("normalizeCatalogCard creates deterministic id and normalized fields", () =
       name: "  Test Card  ",
       issuer: "  Test Bank ",
       network: "  Visa ",
-      link: "https://example.com/card",
       rewards: {
         groceries: 3,
       },
@@ -76,45 +83,48 @@ test("normalizeCatalogCard creates deterministic id and normalized fields", () =
   assert.equal(card.name, "Test Card");
   assert.equal(card.issuer, "Test Bank");
   assert.equal(card.network, "Visa");
-  assert.equal(card.link, "https://example.com/card");
   assert.deepEqual(card.rewards, [{ category: "groceries", multiplier: 3 }]);
 });
 
 test("getCatalogIssuers returns unique sorted issuers", () => {
   const issuers = getCatalogIssuers(buildCatalogCards());
-  assert.equal(issuers[0], "American Express");
-  assert.ok(issuers.includes("Chase"));
-  assert.ok(issuers.includes("Citi"));
-  assert.equal(new Set(issuers).size, issuers.length);
+  assert.deepEqual(issuers, [
+    "American Express",
+    "Capital One",
+    "Chase",
+    "Citi",
+    "Discover",
+    "Fidelity",
+    "U.S. Bank",
+    "Wells Fargo",
+  ]);
 });
 
 test("filterCatalogCards narrows by case-insensitive name search", () => {
   const cards = buildCatalogCards();
-  const results = filterCatalogCards(cards, { searchTerm: "sapphire", issuer: "all" });
+  const results = filterCatalogCards(cards, { searchTerm: "freedom", issuer: "all" });
 
-  assert.ok(results.length >= 2);
-  assert.ok(results.every((card) => card.name.toLowerCase().includes("sapphire")));
+  assert.deepEqual(
+    results.map((card) => card.name),
+    ["Chase Freedom Flex", "Chase Freedom Unlimited"],
+  );
 });
 
 test("filterCatalogCards combines issuer and search filters", () => {
   const cards = buildCatalogCards();
-  const chaseSapphire = filterCatalogCards(cards, {
+  const chaseFreedom = filterCatalogCards(cards, {
     issuer: "chase",
-    searchTerm: "sapphire",
+    searchTerm: "freedom",
   });
 
-  assert.ok(chaseSapphire.length >= 1);
-  assert.ok(
-    chaseSapphire.every(
-      (card) =>
-        card.issuer.toLowerCase() === "chase" &&
-        card.name.toLowerCase().includes("sapphire"),
-    ),
+  assert.deepEqual(
+    chaseFreedom.map((card) => card.name),
+    ["Chase Freedom Flex", "Chase Freedom Unlimited"],
   );
 
   const noMatches = filterCatalogCards(cards, {
     issuer: "Discover",
-    searchTerm: "Sapphire",
+    searchTerm: "Freedom",
   });
   assert.equal(noMatches.length, 0);
 });
@@ -133,7 +143,14 @@ test("filterCatalogCards treats issuer matching as case-insensitive exact match"
 });
 
 test("buildCatalogCards collapses known near-duplicate product aliases", () => {
-  const cards = buildCatalogCards();
+  const cards = buildCatalogCards([
+    { name: "Capital One Venture X", issuer: "Capital One", network: "Visa", rewards: { travel: 2 } },
+    { name: "Venture X Rewards", issuer: "Capital One", network: "Visa", rewards: { other: 2 } },
+    { name: "Capital One Savor", issuer: "Capital One", network: "Mastercard", rewards: { dining: 3 } },
+    { name: "Savor Rewards", issuer: "Capital One", network: "Mastercard", rewards: { groceries: 3 } },
+    { name: "Capital One Quicksilver", issuer: "Capital One", network: "Mastercard", rewards: { other: 1.5 } },
+    { name: "Quicksilver Rewards", issuer: "Capital One", network: "Mastercard", rewards: { other: 1.5 } },
+  ]);
   const names = new Set(cards.map((card) => card.name));
 
   assert.equal(names.has("Capital One Venture X"), true);
@@ -144,55 +161,20 @@ test("buildCatalogCards collapses known near-duplicate product aliases", () => {
 
   assert.equal(names.has("Capital One Quicksilver"), true);
   assert.equal(names.has("Quicksilver Rewards"), false);
-
-  assert.equal(names.has("Amazon Prime Visa"), true);
-  assert.equal(names.has("Prime Visa"), false);
-
-  assert.equal(names.has("Bank of America Customized Cash Rewards"), true);
-  assert.equal(names.has("Customized Cash Rewards"), false);
-
-  assert.equal(names.has("Bank of America Premium Rewards"), true);
-  assert.equal(names.has("Premium Rewards"), false);
 });
 
-test("buildCatalogCards applies reward overrides for selected reference cards", () => {
+test("buildCatalogCards keeps expected rewards for curated cards", () => {
   const cards = buildCatalogCards();
   const byName = new Map(cards.map((card) => [card.name, card]));
 
-  const altitudeGo = byName.get("U.S. Bank Altitude Go");
-  assert.ok(altitudeGo);
-  assert.deepEqual(altitudeGo.rewards, [
-    { category: "dining", multiplier: 4 },
-    { category: "ev_charging", multiplier: 2 },
-    { category: "gas", multiplier: 2 },
-    { category: "groceries", multiplier: 2 },
+  const blueCashPreferred = byName.get("Blue Cash Preferred");
+  assert.ok(blueCashPreferred);
+  assert.deepEqual(blueCashPreferred.rewards, [
+    { category: "gas", multiplier: 3 },
+    { category: "groceries", multiplier: 6 },
     { category: "other", multiplier: 1 },
-    { category: "streaming", multiplier: 2 },
-  ]);
-
-  const amazonVisa = byName.get("Amazon Visa");
-  assert.ok(amazonVisa);
-  assert.deepEqual(amazonVisa.rewards, [
-    { category: "dining", multiplier: 2 },
-    { category: "gas", multiplier: 2 },
-    { category: "online", multiplier: 3 },
-    { category: "other", multiplier: 1 },
-    { category: "transit", multiplier: 2 },
-  ]);
-
-  const ventureRewards = byName.get("Venture Rewards");
-  assert.ok(ventureRewards);
-  assert.deepEqual(ventureRewards.rewards, [
-    { category: "other", multiplier: 2 },
-    { category: "travel", multiplier: 2 },
-    { category: "travel_portal", multiplier: 5 },
-  ]);
-
-  const doubleCash = byName.get("Citi Double Cash");
-  assert.ok(doubleCash);
-  assert.deepEqual(doubleCash.rewards, [
-    { category: "other", multiplier: 2 },
-    { category: "travel_portal", multiplier: 5 },
+    { category: "streaming", multiplier: 6 },
+    { category: "transit", multiplier: 3 },
   ]);
 
   const ventureX = byName.get("Capital One Venture X");
@@ -200,10 +182,6 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
   assert.deepEqual(ventureX.rewards, [
     { category: "other", multiplier: 2 },
     { category: "travel", multiplier: 2 },
-    { category: "travel_portal_car_rentals", multiplier: 10 },
-    { category: "travel_portal_flights", multiplier: 5 },
-    { category: "travel_portal_hotels", multiplier: 10 },
-    { category: "travel_portal_vacation_rentals", multiplier: 5 },
   ]);
 
   const savor = byName.get("Capital One Savor");
@@ -214,21 +192,27 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "groceries", multiplier: 3 },
     { category: "other", multiplier: 1 },
     { category: "streaming", multiplier: 3 },
-    { category: "travel_portal_car_rentals", multiplier: 5 },
-    { category: "travel_portal_hotels", multiplier: 5 },
-    { category: "travel_portal_vacation_rentals", multiplier: 5 },
   ]);
 
-  const strataPremier = byName.get("Citi Strata Premier");
-  assert.ok(strataPremier);
-  assert.deepEqual(strataPremier.rewards, [
+  const freedomUnlimited = byName.get("Chase Freedom Unlimited");
+  assert.ok(freedomUnlimited);
+  assert.deepEqual(freedomUnlimited.rewards, [
     { category: "dining", multiplier: 3 },
-    { category: "gas", multiplier: 3 },
-    { category: "groceries", multiplier: 3 },
-    { category: "other", multiplier: 1 },
-    { category: "travel", multiplier: 3 },
-    { category: "travel_portal", multiplier: 10 },
+    { category: "drugstore", multiplier: 3 },
+    { category: "other", multiplier: 1.5 },
   ]);
+
+  const freedomFlex = byName.get("Chase Freedom Flex");
+  assert.ok(freedomFlex);
+  assert.deepEqual(freedomFlex.rewards, [
+    { category: "dining", multiplier: 5 },
+    { category: "drugstore", multiplier: 3 },
+    { category: "other", multiplier: 1 },
+  ]);
+
+  const doubleCash = byName.get("Citi Double Cash");
+  assert.ok(doubleCash);
+  assert.deepEqual(doubleCash.rewards, [{ category: "other", multiplier: 2 }]);
 
   const strata = byName.get("Citi Strata");
   assert.ok(strata);
@@ -239,27 +223,26 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "groceries", multiplier: 3 },
     { category: "other", multiplier: 1 },
     { category: "transit", multiplier: 3 },
-    { category: "travel_portal_attractions", multiplier: 5 },
-    { category: "travel_portal_car_rentals", multiplier: 5 },
-    { category: "travel_portal_hotels", multiplier: 5 },
   ]);
 
-  const freedomUnlimited = byName.get("Chase Freedom Unlimited");
-  assert.ok(freedomUnlimited);
-  assert.deepEqual(freedomUnlimited.rewards, [
-    { category: "dining", multiplier: 3 },
-    { category: "drugstore", multiplier: 3 },
-    { category: "other", multiplier: 1.5 },
-    { category: "travel_portal", multiplier: 5 },
-  ]);
-
-  const freedomFlex = byName.get("Chase Freedom Flex");
-  assert.ok(freedomFlex);
-  assert.deepEqual(freedomFlex.rewards, [
-    { category: "dining", multiplier: 5 },
-    { category: "drugstore", multiplier: 3 },
+  const discoverItCashBack = byName.get("Discover it Cash Back");
+  assert.ok(discoverItCashBack);
+  assert.deepEqual(discoverItCashBack.rewards, [
+    { category: "groceries", multiplier: 5 },
     { category: "other", multiplier: 1 },
-    { category: "travel_portal", multiplier: 5 },
+    { category: "streaming", multiplier: 5 },
+    { category: "wholesale_clubs", multiplier: 5 },
+  ]);
+
+  const altitudeGo = byName.get("U.S. Bank Altitude Go");
+  assert.ok(altitudeGo);
+  assert.deepEqual(altitudeGo.rewards, [
+    { category: "dining", multiplier: 4 },
+    { category: "ev_charging", multiplier: 2 },
+    { category: "gas", multiplier: 2 },
+    { category: "groceries", multiplier: 2 },
+    { category: "other", multiplier: 1 },
+    { category: "streaming", multiplier: 2 },
   ]);
 
   const autograph = byName.get("Wells Fargo Autograph");
@@ -274,68 +257,15 @@ test("buildCatalogCards applies reward overrides for selected reference cards", 
     { category: "travel", multiplier: 3 },
   ]);
 
-  const unitedClub = byName.get("United Club Card");
-  assert.ok(unitedClub);
-  assert.deepEqual(unitedClub.rewards, [
-    { category: "dining", multiplier: 2 },
-    { category: "other", multiplier: 1 },
-    { category: "travel", multiplier: 4 },
-  ]);
-
-  const deltaPlatinum = byName.get("Delta SkyMiles Platinum");
-  assert.ok(deltaPlatinum);
-  assert.deepEqual(deltaPlatinum.rewards, [
-    { category: "dining", multiplier: 3 },
-    { category: "groceries", multiplier: 3 },
-    { category: "other", multiplier: 1 },
-    { category: "travel", multiplier: 3 },
-  ]);
-
-  const hiltonSurpass = byName.get("Hilton Honors Surpass");
-  assert.ok(hiltonSurpass);
-  assert.deepEqual(hiltonSurpass.rewards, [
-    { category: "dining", multiplier: 6 },
-    { category: "gas", multiplier: 6 },
-    { category: "groceries", multiplier: 6 },
-    { category: "online", multiplier: 4 },
-    { category: "other", multiplier: 3 },
-    { category: "travel", multiplier: 12 },
-  ]);
-
-  const jetBluePlus = byName.get("JetBlue Plus Card");
-  assert.ok(jetBluePlus);
-  assert.deepEqual(jetBluePlus.rewards, [
-    { category: "dining", multiplier: 2 },
-    { category: "groceries", multiplier: 2 },
-    { category: "other", multiplier: 1 },
-    { category: "travel", multiplier: 6 },
-  ]);
-
-  const bankAmericard = byName.get("BankAmericard");
-  assert.ok(bankAmericard);
-  assert.deepEqual(bankAmericard.rewards, [{ category: "other", multiplier: 1 }]);
-
-  const platinum = byName.get("Platinum Mastercard");
-  assert.ok(platinum);
-  assert.deepEqual(platinum.rewards, [{ category: "other", multiplier: 1 }]);
-
-  const platinumSecured = byName.get("Platinum Secured");
-  assert.ok(platinumSecured);
-  assert.deepEqual(platinumSecured.rewards, [{ category: "other", multiplier: 1 }]);
-
-  const usBankPlatinum = byName.get("U.S. Bank Visa Platinum");
-  assert.ok(usBankPlatinum);
-  assert.deepEqual(usBankPlatinum.rewards, [{ category: "other", multiplier: 1 }]);
-
   const usBankSmartly = byName.get("U.S. Bank Smartly Visa Signature");
   assert.ok(usBankSmartly);
   assert.deepEqual(usBankSmartly.rewards, [{ category: "other", multiplier: 2 }]);
 
+  const quicksilver = byName.get("Capital One Quicksilver");
+  assert.ok(quicksilver);
+  assert.deepEqual(quicksilver.rewards, [{ category: "other", multiplier: 1.5 }]);
+
   const fidelityRewardsVisa = byName.get("Fidelity Rewards Visa Signature Card");
   assert.ok(fidelityRewardsVisa);
   assert.deepEqual(fidelityRewardsVisa.rewards, [{ category: "other", multiplier: 2 }]);
-
-  const reflect = byName.get("Wells Fargo Reflect");
-  assert.ok(reflect);
-  assert.deepEqual(reflect.rewards, [{ category: "other", multiplier: 1 }]);
 });
