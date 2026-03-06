@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 05
 current_phase_name: mixed wallet ux validation
-current_plan: Not started
+current_plan: 03
 status: completed
-stopped_at: Completed quick task 1
-last_updated: "2026-03-06T16:37:55Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-03-06T18:03:30Z"
 last_activity: 2026-03-06
 progress:
   total_phases: 5
   completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 14
+  completed_plans: 14
   percent: 100
 ---
 
@@ -31,11 +31,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 **Current Phase:** 05
 **Current Phase Name:** mixed wallet ux validation
 **Total Phases:** 5
-**Current Plan:** Not started
-**Total Plans in Phase:** 2
+**Current Plan:** 03
+**Total Plans in Phase:** 3
 **Status:** Milestone complete
 **Last Activity:** 2026-03-06
-**Last Activity Description:** Quick task 1 complete
+**Last Activity Description:** Completed 05-03 gap closure plan
 **Progress:** [██████████] 100%
 
 ## Decisions Made
@@ -54,6 +54,8 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 - [Phase 05]: Derive fallback custom ids from stable card content instead of Date.now() so legacy reloads keep ranking output deterministic.
 - [Phase 05]: Keep the catalog collapse as simple app state in app.js so the existing catalog controls preserve their current behavior when reopened.
 - [Phase 05]: Create the ranking overflow container from app.js so Task 2 stays scoped to comparison rendering without widening the HTML surface.
+- [Phase 05]: Queue catalog reveal only on the open transition so normal catalog rerenders do not keep forcing scroll position.
+- [Phase 05]: Preserve root-cause and debug-session metadata in 05-UAT.md while marking the diagnosed gaps closed.
 
 ## Blockers
 
@@ -71,9 +73,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 |-------|------|----------|-------|-------|
 | 05 | 01 | 2 min | 2 | 4 |
 | 05 | 02 | 10 min | 2 | 3 |
+| 05 | 03 | 9 min | 2 | 3 |
 
 ## Session
 
-**Last Date:** 2026-03-06T02:28:47.013Z
-**Stopped At:** Completed quick task 1
+**Last Date:** 2026-03-06T18:03:30Z
+**Stopped At:** Completed 05-03-PLAN.md
 **Resume File:** None
