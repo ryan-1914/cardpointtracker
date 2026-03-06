@@ -66,6 +66,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
+}
+
+.panel-heading {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.panel-heading h2 {
+  margin-bottom: 0;
 }
 
 .count {
@@ -129,6 +139,18 @@ button.ghost {
   gap: 0.35rem;
   margin-bottom: 0.65rem;
   grid-template-columns: 1fr;
+}
+
+.catalog-toggle {
+  white-space: nowrap;
+}
+
+.catalog-panel {
+  margin-top: 0.85rem;
+}
+
+.catalog-panel.catalog-collapsed {
+  display: none;
 }
 
 .catalog-controls label {

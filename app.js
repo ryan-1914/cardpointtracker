@@ -27,6 +27,7 @@ const state = {
   catalogSearch: "",
   catalogIssuer: "all",
   catalogFeedbackById: {},
+  isCatalogCollapsed: true,
 };
 
 const els = {
@@ -37,6 +38,8 @@ const els = {
   catalogList: document.getElementById("catalogList"),
   catalogCount: document.getElementById("catalogCount"),
   catalogIssuer: document.getElementById("catalogIssuer"),
+  catalogToggle: document.getElementById("catalogToggle"),
+  catalogPanel: document.getElementById("catalogPanel"),
   cardList: document.getElementById("cardList"),
   cardCount: document.getElementById("cardCount"),
   cardForm: document.getElementById("cardForm"),
@@ -162,6 +165,10 @@ function wireEvents() {
   });
   els.catalogIssuer?.addEventListener("change", (event) => {
     state.catalogIssuer = event.target.value || "all";
+    renderCatalog();
+  });
+  els.catalogToggle?.addEventListener("click", () => {
+    state.isCatalogCollapsed = !state.isCatalogCollapsed;
     renderCatalog();
   });
   els.catalogList?.addEventListener("click", async (event) => {
@@ -437,13 +444,21 @@ function renderCards() {
 }
 
 function renderCatalog() {
-  if (!els.catalogList || !els.catalogCount) return;
+  if (!els.catalogList || !els.catalogCount || !els.catalogToggle || !els.catalogPanel) return;
 
   const filtered = catalogCore.filterCatalogCards(state.catalogCards, {
     searchTerm: state.catalogSearch,
     issuer: state.catalogIssuer,
   });
   els.catalogCount.textContent = `${filtered.length} ${filtered.length === 1 ? "card" : "cards"}`;
+  els.catalogToggle.textContent = state.isCatalogCollapsed ? "Show Catalog" : "Hide Catalog";
+  els.catalogToggle.setAttribute("aria-expanded", String(!state.isCatalogCollapsed));
+  els.catalogPanel.hidden = state.isCatalogCollapsed;
+  els.catalogPanel.classList.toggle("catalog-collapsed", state.isCatalogCollapsed);
+
+  if (state.isCatalogCollapsed) {
+    return;
+  }
 
   if (filtered.length === 0) {
     const hasSearch = Boolean(String(state.catalogSearch || "").trim());

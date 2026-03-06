@@ -36,28 +36,6 @@
       </section>
 
       <section class="panel">
-        <div class="panel-header">
-          <h2>Popular Card Catalog</h2>
-          <span id="catalogCount" class="count">0 cards</span>
-        </div>
-        <div class="catalog-controls">
-          <label for="catalogSearch">Search by card name</label>
-          <input
-            id="catalogSearch"
-            type="search"
-            placeholder="Search catalog (e.g., Sapphire)"
-            autocomplete="off"
-          />
-          <label for="catalogIssuer">Filter by issuer</label>
-          <select id="catalogIssuer">
-            <option value="all">All issuers</option>
-          </select>
-        </div>
-        <ul id="catalogList" class="catalog-list"></ul>
-        <p class="muted catalog-note">Add catalog cards directly to your wallet to include them in recommendations.</p>
-      </section>
-
-      <section class="panel">
         <h2 id="formTitle">Add Card</h2>
         <form id="cardForm" class="card-form">
           <div class="fields">
@@ -84,6 +62,41 @@
             <button type="submit" id="saveCardBtn">Save Card</button>
           </div>
         </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-heading">
+            <h2>Popular Card Catalog</h2>
+            <span id="catalogCount" class="count">0 cards</span>
+          </div>
+          <button
+            type="button"
+            id="catalogToggle"
+            class="secondary catalog-toggle"
+            aria-expanded="false"
+            aria-controls="catalogPanel"
+          >
+            Show Catalog
+          </button>
+        </div>
+        <div id="catalogPanel" class="catalog-panel catalog-collapsed" hidden>
+          <div class="catalog-controls">
+            <label for="catalogSearch">Search by card name</label>
+            <input
+              id="catalogSearch"
+              type="search"
+              placeholder="Search catalog (e.g., Sapphire)"
+              autocomplete="off"
+            />
+            <label for="catalogIssuer">Filter by issuer</label>
+            <select id="catalogIssuer">
+              <option value="all">All issuers</option>
+            </select>
+          </div>
+          <ul id="catalogList" class="catalog-list"></ul>
+          <p class="muted catalog-note">Add catalog cards directly to your wallet to include them in recommendations.</p>
+        </div>
       </section>
     </main>
 
