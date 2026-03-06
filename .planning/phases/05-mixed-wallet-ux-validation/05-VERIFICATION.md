@@ -1,6 +1,6 @@
 ---
 phase: 05-mixed-wallet-ux-validation
-verified: 2026-03-06T03:27:48Z
+verified: 2026-03-06T18:05:11Z
 status: passed
 score: 3/3 roadmap success criteria verified
 ---
@@ -8,7 +8,7 @@ score: 3/3 roadmap success criteria verified
 # Phase 5: Mixed Wallet UX Validation Verification Report
 
 **Phase Goal:** Validate the complete dual-source wallet experience for general users and ensure mixed ranking accuracy.
-**Verified:** 2026-03-06T03:27:48Z
+**Verified:** 2026-03-06T18:05:11Z
 **Status:** passed
 
 ## Goal Achievement
@@ -41,6 +41,13 @@ score: 3/3 roadmap success criteria verified
 | Comparison results show only the top 4 qualifying cards by default while clearly revealing when more results exist. | VERIFIED | `app.js:22` sets `DEFAULT_VISIBLE_RANKING_COUNT = 4`; `app.js:575-605` truncates by default and renders the overflow message plus `View all` / `Show fewer` controls; `styles.css:227-243` styles the overflow affordance. |
 | The catalog starts collapsed but remains easy to expand and use without changing current add/search/filter behavior. | VERIFIED | `app.js:31` initializes the catalog as collapsed, `index.html:73-99` provides the toggle/panel shell, `app.js:177-199` keeps search/filter/add handlers intact, and `app.js:480-538` toggles visibility without resetting the existing catalog state. Human acceptance approval confirmed the expand/use behavior in the browser review. |
 
+### 05-03 Plan: Gap Closure for Mobile Catalog Visibility
+
+| Truth | Status | Evidence |
+|-------|--------|----------|
+| On mobile-height viewports, tapping Show Catalog visibly reveals controls without requiring blind scroll. | VERIFIED | `app.js:189` marks open transitions for reveal, `app.js:493-495` triggers one-time reveal after expansion, and `app.js:550-574` scrolls the first revealed control into view only when below the viewport on short screens. |
+| Cold-start smoke evidence is tracked independently from catalog usability behavior. | VERIFIED | `05-UAT.md` now scopes Test 1 to cold-start boot/render and closes it separately from catalog findings, while Test 3 retains catalog-specific diagnosis/resolution metadata and debug-session references. |
+
 ## Required Artifacts
 
 | Artifact | Plan Expectation | Status | Details |
@@ -61,8 +68,9 @@ score: 3/3 roadmap success criteria verified
 |------|-----------------------------|----------------------------------|--------|----------|
 | 05-01 | WAL-03 | `REQUIREMENTS.md` defines WAL-03 as "Ranking logic applies to both custom and catalog cards using the same category/fallback rules" and maps it to Phase 5. | ACCOUNTED FOR | Logic is implemented in `comparison-core.js:24-76` and locked by `tests/comparison-core.test.mjs:198-307,356-420`. |
 | 05-02 | WAL-03 | `REQUIREMENTS.md` maps WAL-03 to Phase 5 and ROADMAP Phase 5 lists WAL-03 as the only phase requirement. | ACCOUNTED FOR | The UI consumes normalized mixed-wallet ranking results in `app.js:541-617` and exposes the compare-first mixed-wallet experience in `index.html:19-100`. |
+| 05-03 | WAL-03 | `REQUIREMENTS.md` keeps WAL-03 mapped to Phase 5 and the gap-closure plan frontmatter references WAL-03 for corrective scope. | ACCOUNTED FOR | `app.js:189,493-495,550-574` closes the mobile visibility gap while `05-UAT.md` and `05-VALIDATION.md` preserve requirement-traceable evidence closure. |
 
-**Coverage:** 2/2 plan frontmatter references accounted for, 1 unique requirement satisfied.
+**Coverage:** 3/3 plan frontmatter references accounted for, 1 unique requirement satisfied.
 
 ## Local Checks Run
 
@@ -72,6 +80,8 @@ score: 3/3 roadmap success criteria verified
 | `node --test tests/comparison-core.test.mjs tests/wallet-core.test.mjs` | PASSED - 26 tests passed, 0 failed, duration 63.381708 ms |
 | `node --check app.js && rg -n "Add Card|Popular Card Catalog|catalog-toggle|aria-expanded|catalog-collapsed" index.html app.js styles.css` | PASSED - confirmed compare-first/catalog-collapse wiring markers |
 | `node --check app.js && rg -n "View all|Show fewer|ranking-more-count|ranking-expand" app.js styles.css index.html` | PASSED - confirmed top-4 overflow affordance markers |
+| `node --check app.js && node --test tests/comparison-core.test.mjs tests/wallet-core.test.mjs tests/catalog-core.test.mjs` | PASSED - 35 tests passed, 0 failed (post-gap-closure execution) |
+| `rg -n "shouldRevealCatalogOnRender|revealCatalogControlsIfNeeded|scrollIntoView|getBoundingClientRect|innerHeight" app.js` | PASSED - confirmed mobile reveal logic wiring |
 
 ## Human Verification Outcome
 
@@ -86,6 +96,7 @@ The final roadmap claim that the mixed-wallet main screen is "fast and understan
 - Validation that the top-4 ranking plus overflow control remained understandable with 5+ qualifying cards
 - Validation that the collapsed catalog remained discoverable and responsive after expansion
 - Note retained: `renderCatalog()` still computes the filtered catalog before returning for the collapsed state (`app.js:475-485`), so collapsed-by-default improves visual focus more than it proves render-time efficiency. No blocking performance issue was reported in acceptance.
+- Gap-closure recheck at mobile viewport (`390x844`) confirmed Show Catalog reveals controls immediately after tap.
 
 ## Gaps Summary
 
@@ -93,12 +104,12 @@ Phase 05 appears functionally complete and WAL-03 is satisfied in the real codeb
 
 ## Verification Metadata
 
-- Verification approach: Goal-backward against roadmap success criteria plus both plan `must_haves`
+- Verification approach: Goal-backward against roadmap success criteria plus all phase plan `must_haves`
 - Requirements checked: WAL-03
-- Must-haves source: `05-01-PLAN.md`, `05-02-PLAN.md`
-- Automated checks: 4 passed, 0 failed
+- Must-haves source: `05-01-PLAN.md`, `05-02-PLAN.md`, `05-03-PLAN.md`
+- Automated checks: 6 passed, 0 failed
 - Human checks required: 0
 
 ---
-*Verified: 2026-03-06T03:27:48Z*
+*Verified: 2026-03-06T18:05:11Z*
 *Verifier: Codex*
