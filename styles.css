@@ -224,6 +224,24 @@ button.ghost {
   font-size: 0.88rem;
 }
 
+.ranking-overflow {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ranking-more-count {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.ranking-expand {
+  padding-inline: 0.8rem;
+}
+
 .catalog-item {
   border-left: 4px solid #d6e8f4;
 }

@@ -19,6 +19,7 @@ const DB_NAME = "cardtracker-db";
 const DB_VERSION = 1;
 const STORE_CARDS = "cards";
 const CATALOG_FEEDBACK_MS = 1800;
+const DEFAULT_VISIBLE_RANKING_COUNT = 4;
 
 const state = {
   cards: [],
@@ -28,12 +29,14 @@ const state = {
   catalogIssuer: "all",
   catalogFeedbackById: {},
   isCatalogCollapsed: true,
+  isRankingExpanded: false,
 };
 
 const els = {
   categoryPicker: document.getElementById("categoryPicker"),
   result: document.getElementById("result"),
   ranking: document.getElementById("ranking"),
+  rankingOverflow: document.getElementById("rankingOverflow"),
   catalogSearch: document.getElementById("catalogSearch"),
   catalogList: document.getElementById("catalogList"),
   catalogCount: document.getElementById("catalogCount"),
@@ -76,6 +79,7 @@ async function bootstrap() {
 
 async function init() {
   populateCategoryPickers();
+  ensureRankingOverflow();
   wireEvents();
   dbPromise = openDb();
   const storedCards = await readCards();
@@ -158,7 +162,18 @@ async function loadWalletCore() {
 function wireEvents() {
   els.addRewardRow.addEventListener("click", () => addRewardRow());
   els.cancelEdit.addEventListener("click", resetForm);
-  els.categoryPicker.addEventListener("change", renderComparison);
+  els.categoryPicker.addEventListener("change", () => {
+    state.isRankingExpanded = false;
+    renderComparison();
+  });
+  els.rankingOverflow?.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const toggle = event.target.closest("[data-ranking-toggle]");
+    if (!toggle) return;
+
+    state.isRankingExpanded = !state.isRankingExpanded;
+    renderComparison();
+  });
   els.catalogSearch?.addEventListener("input", (event) => {
     state.catalogSearch = event.target.value || "";
     renderCatalog();
@@ -254,6 +269,17 @@ function addRewardRow(category = "other", multiplier = "1") {
   categorySelect.value = category;
   multiplierInput.value = String(multiplier);
   els.rewardRows.appendChild(fragment);
+}
+
+function ensureRankingOverflow() {
+  if (els.rankingOverflow || !els.ranking) return;
+
+  const overflow = document.createElement("div");
+  overflow.id = "rankingOverflow";
+  overflow.className = "ranking-overflow";
+  overflow.hidden = true;
+  els.ranking.before(overflow);
+  els.rankingOverflow = overflow;
 }
 
 function populateCatalogIssuerOptions() {
@@ -516,9 +542,15 @@ function renderComparison() {
   const category = els.categoryPicker.value || "other";
   const comparisonCards = walletCore.normalizeWalletCards(state.cards);
   const scored = comparisonCore.computeComparisonResults(comparisonCards, category);
+  const rankingOverflow = els.rankingOverflow;
   els.result.classList.remove("result-callout", "result-empty");
 
   if (comparisonCards.length === 0) {
+    state.isRankingExpanded = false;
+    if (rankingOverflow) {
+      rankingOverflow.hidden = true;
+      rankingOverflow.innerHTML = "";
+    }
     els.result.textContent = "Add at least one card to compare. Use the Add Card form below to get started.";
     els.result.classList.add("muted");
     els.result.classList.add("result-empty");
@@ -527,6 +559,11 @@ function renderComparison() {
   }
 
   if (scored.length === 0) {
+    state.isRankingExpanded = false;
+    if (rankingOverflow) {
+      rankingOverflow.hidden = true;
+      rankingOverflow.innerHTML = "";
+    }
     els.result.textContent = "No qualifying cards for this category.";
     els.result.classList.add("muted");
     els.result.classList.add("result-empty");
@@ -535,12 +572,40 @@ function renderComparison() {
   }
 
   const [best] = scored;
-  const categoryLabel = CATEGORIES.find((cat) => cat.id === category)?.label || category;
+  const hasOverflow = scored.length > DEFAULT_VISIBLE_RANKING_COUNT;
+  const visibleScored = hasOverflow && !state.isRankingExpanded
+    ? scored.slice(0, DEFAULT_VISIBLE_RANKING_COUNT)
+    : scored;
+  const hiddenCount = Math.max(scored.length - DEFAULT_VISIBLE_RANKING_COUNT, 0);
   els.result.classList.remove("muted");
   els.result.classList.add("result-callout");
-  els.result.innerHTML = `Best card for <strong>${escapeHtml(categoryLabel)}</strong>: <strong>${escapeHtml(best.card.name)}</strong> at <strong>${comparisonCore.formatMultiplier(best.multiplier)}</strong>.`;
+  els.result.innerHTML = `Best card: <strong>${escapeHtml(best.card.name)}</strong> at <strong>${comparisonCore.formatMultiplier(best.multiplier)}</strong>.`;
 
-  els.ranking.innerHTML = scored
+  if (rankingOverflow) {
+    if (hasOverflow) {
+      const overflowMessage = state.isRankingExpanded
+        ? `Showing all ${scored.length} qualifying cards`
+        : `${hiddenCount} more ${hiddenCount === 1 ? "card" : "cards"} available`;
+      rankingOverflow.hidden = false;
+      rankingOverflow.innerHTML = `
+        <span class="ranking-more-count">${overflowMessage}</span>
+        <button
+          type="button"
+          class="secondary ranking-expand"
+          data-ranking-toggle
+          aria-expanded="${state.isRankingExpanded ? "true" : "false"}"
+        >
+          ${state.isRankingExpanded ? "Show fewer" : `View all ${scored.length}`}
+        </button>
+      `;
+    } else {
+      state.isRankingExpanded = false;
+      rankingOverflow.hidden = true;
+      rankingOverflow.innerHTML = "";
+    }
+  }
+
+  els.ranking.innerHTML = visibleScored
     .map(
       ({ card, multiplier, source }, idx) => `
       <li class="${idx === 0 ? "best" : ""}">
