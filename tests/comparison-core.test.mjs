@@ -194,3 +194,161 @@ test("mixed wallet ranking remains deterministic after custom create/edit/delete
     ["Capital One Venture X"],
   );
 });
+
+test("equivalent custom and catalog category matches stay source-neutral under deterministic tie-breaking", () => {
+  const catalogCard = createCatalogWalletCard(
+    {
+      id: "parity-plus",
+      name: "Parity Plus",
+      issuer: "Catalog Bank",
+      rewards: [{ category: "dining", multiplier: 3 }],
+    },
+    "2026-03-05T10:00:00.000Z",
+  );
+  const customCard = normalizeWalletCard({
+    id: "custom-parity-plus",
+    name: "Parity Plus",
+    issuer: "Local CU",
+    rewards: [{ category: "dining", multiplier: 3 }],
+  });
+
+  const forward = computeComparisonResults([catalogCard, customCard], "dining");
+  const reverse = computeComparisonResults([customCard, catalogCard], "dining");
+
+  assert.deepEqual(
+    forward.map((entry) => ({
+      id: entry.card.id,
+      name: entry.card.name,
+      multiplier: entry.multiplier,
+      source: entry.source,
+    })),
+    [
+      {
+        id: "catalog-parity-plus",
+        name: "Parity Plus",
+        multiplier: 3,
+        source: "category match",
+      },
+      {
+        id: "custom-parity-plus",
+        name: "Parity Plus",
+        multiplier: 3,
+        source: "category match",
+      },
+    ],
+  );
+  assert.deepEqual(
+    reverse.map((entry) => ({
+      id: entry.card.id,
+      name: entry.card.name,
+      multiplier: entry.multiplier,
+      source: entry.source,
+    })),
+    forward.map((entry) => ({
+      id: entry.card.id,
+      name: entry.card.name,
+      multiplier: entry.multiplier,
+      source: entry.source,
+    })),
+  );
+});
+
+test("equivalent custom and catalog other fallback cards share deterministic fallback semantics", () => {
+  const catalogCard = createCatalogWalletCard(
+    {
+      id: "fallback-parity",
+      name: "Fallback Parity",
+      issuer: "Catalog Bank",
+      rewards: [{ category: "other", multiplier: 2 }],
+    },
+    "2026-03-05T10:01:00.000Z",
+  );
+  const customCard = normalizeWalletCard({
+    id: "custom-fallback-parity",
+    name: "Fallback Parity",
+    issuer: "Local CU",
+    rewards: [{ category: "other", multiplier: 2 }],
+  });
+
+  const forward = computeComparisonResults([customCard, catalogCard], "streaming");
+  const reverse = computeComparisonResults([catalogCard, customCard], "streaming");
+
+  assert.deepEqual(
+    forward.map((entry) => ({
+      id: entry.card.id,
+      source: entry.source,
+      multiplier: entry.multiplier,
+    })),
+    [
+      {
+        id: "catalog-fallback-parity",
+        source: "other fallback",
+        multiplier: 2,
+      },
+      {
+        id: "custom-fallback-parity",
+        source: "other fallback",
+        multiplier: 2,
+      },
+    ],
+  );
+  assert.deepEqual(
+    reverse.map((entry) => ({
+      id: entry.card.id,
+      source: entry.source,
+      multiplier: entry.multiplier,
+    })),
+    forward.map((entry) => ({
+      id: entry.card.id,
+      source: entry.source,
+      multiplier: entry.multiplier,
+    })),
+  );
+});
+
+test("mixed direct matches and fallback cards still rank by multiplier before alphabetical tie-breaking", () => {
+  const cards = [
+    normalizeWalletCard({
+      id: "custom-fallback-zeta",
+      name: "Zeta Fallback",
+      rewards: [{ category: "other", multiplier: 3 }],
+    }),
+    createCatalogWalletCard(
+      {
+        id: "alpha-direct",
+        name: "Alpha Direct",
+        issuer: "Catalog Bank",
+        rewards: [{ category: "groceries", multiplier: 4 }],
+      },
+      "2026-03-05T10:02:00.000Z",
+    ),
+    normalizeWalletCard({
+      id: "custom-beta-direct",
+      name: "Beta Direct",
+      rewards: [{ category: "groceries", multiplier: 4 }],
+    }),
+    createCatalogWalletCard(
+      {
+        id: "gamma-fallback",
+        name: "Gamma Fallback",
+        issuer: "Catalog Bank",
+        rewards: [{ category: "other", multiplier: 2 }],
+      },
+      "2026-03-05T10:03:00.000Z",
+    ),
+  ];
+
+  assert.deepEqual(
+    computeComparisonResults(cards, "groceries").map((entry) => ({
+      name: entry.card.name,
+      multiplier: entry.multiplier,
+      source: entry.source,
+    })),
+    [
+      { name: "Alpha Direct", multiplier: 4, source: "category match" },
+      { name: "Beta Direct", multiplier: 4, source: "category match" },
+      { name: "Zeta Fallback", multiplier: 3, source: "other fallback" },
+      { name: "Gamma Fallback", multiplier: 2, source: "other fallback" },
+    ],
+  );
+});
