@@ -14,7 +14,7 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
 - [x] **Phase 2: Catalog Discovery Experience** - Add built-in catalog browsing with name and issuer discovery (completed 2026-02-28)
 - [x] **Phase 3: Catalog-to-Wallet Integration** - Allow adding/removing catalog cards with duplicate prevention (completed 2026-02-28)
 - [x] **Phase 4: Card Type Rules & Editability** - Enforce read-only catalog cards while preserving editable custom cards (completed 2026-02-28)
-- [ ] **Phase 5: Mixed Wallet UX Validation** - Validate combined custom+catalog ranking UX for general users
+- [x] **Phase 5: Mixed Wallet UX Validation** - Validate combined custom+catalog ranking UX for general users (completed 2026-03-06)
 
 ## Phase Details
 
@@ -85,11 +85,11 @@ Plans:
   1. Ranking logic treats catalog and custom cards consistently for the same category.
   2. Main screen experience remains fast and understandable with mixed wallet composition.
   3. Key edge cases (empty wallet, single card, catalog-only, custom-only, mixed) behave correctly.
-**Plans:** 1/2 plans complete
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 05-01: Validate mixed-wallet ranking and fallback behavior across edge cases
-- [ ] 05-02: Ship UX polish, copy clarity, and final acceptance checks for general users
+- [x] 05-02: Ship UX polish, copy clarity, and final acceptance checks for general users
 
 ## Progress
 
@@ -99,4 +99,4 @@ Plans:
 | 2. Catalog Discovery Experience | 3/3 | Complete    | 2026-02-28 |
 | 3. Catalog-to-Wallet Integration | 3/3 | Complete    | 2026-02-28 |
 | 4. Card Type Rules & Editability | 3/3 | Complete    | 2026-02-28 |
-| 5. Mixed Wallet UX Validation | 1/2 | In Progress | - |
+| 5. Mixed Wallet UX Validation | 2/2 | Complete   | 2026-03-06 |

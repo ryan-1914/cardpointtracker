@@ -5,16 +5,16 @@ milestone_name: milestone
 current_phase: 05
 current_phase_name: mixed wallet ux validation
 current_plan: 02
-status: in_progress
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-06T02:21:56.786Z"
+status: verifying
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-06T02:28:47.014Z"
 last_activity: 2026-03-06
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 13
-  completed_plans: 12
-  percent: 92
+  completed_plans: 13
+  percent: 100
 ---
 
 # Project State
@@ -33,10 +33,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 **Total Phases:** 5
 **Current Plan:** 02
 **Total Plans in Phase:** 2
-**Status:** In progress
+**Status:** Phase complete — ready for verification
 **Last Activity:** 2026-03-06
-**Last Activity Description:** Completed 05-01 mixed-wallet ranking validation and advanced to Phase 05 Plan 02
-**Progress:** [█████████░] 92%
+**Last Activity Description:** Completed 05-02 mixed-wallet UX validation polish and moved Phase 05 to verification-ready status
+**Progress:** [██████████] 100%
 
 ## Decisions Made
 
@@ -52,6 +52,8 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 - [Phase 04]: Harden ranking confidence with explicit mixed-wallet CRUD sequence tests rather than relying on ad hoc manual validation. — Guards deterministic ranking behavior after create/edit/delete mutations in realistic wallet states.
 - [Phase 05]: Use normalized card ids as the final comparison tie-breaker so equal-name mixed-source cards no longer depend on input order.
 - [Phase 05]: Derive fallback custom ids from stable card content instead of Date.now() so legacy reloads keep ranking output deterministic.
+- [Phase 05]: Keep the catalog collapse as simple app state in app.js so the existing catalog controls preserve their current behavior when reopened.
+- [Phase 05]: Create the ranking overflow container from app.js so Task 2 stays scoped to comparison rendering without widening the HTML surface.
 
 ## Blockers
 
@@ -62,9 +64,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 05 | 01 | 2 min | 2 | 4 |
+| 05 | 02 | 10 min | 2 | 3 |
 
 ## Session
 
-**Last Date:** 2026-03-06T02:21:56.784Z
-**Stopped At:** Completed 05-01-PLAN.md
+**Last Date:** 2026-03-06T02:28:47.013Z
+**Stopped At:** Completed 05-02-PLAN.md
 **Resume File:** None
