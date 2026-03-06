@@ -51,7 +51,14 @@
 
     const leftName = (left.card?.name || "").toLowerCase();
     const rightName = (right.card?.name || "").toLowerCase();
-    return leftName.localeCompare(rightName);
+    const nameCompare = leftName.localeCompare(rightName);
+    if (nameCompare !== 0) {
+      return nameCompare;
+    }
+
+    const leftId = String(left.card?.id || "").toLowerCase();
+    const rightId = String(right.card?.id || "").toLowerCase();
+    return leftId.localeCompare(rightId);
   }
 
   function computeComparisonResults(cards, category) {
