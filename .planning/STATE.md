@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 05
-current_phase_name: mixed wallet ux validation
-current_plan: Not started
-status: completed
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-06T18:05:55.844Z"
-last_activity: 2026-03-06
+current_phase: 06
+current_phase_name: improve mobile experience
+current_plan: 2
+status: ready_to_execute
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-14T21:52:00-04:00"
+last_activity: 2026-03-14
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 5
-  total_plans: 14
-  completed_plans: 14
-  percent: 100
+  total_plans: 17
+  completed_plans: 15
+  percent: 88
 ---
 
 # Project State
@@ -24,19 +24,26 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** A user can choose a purchase category and immediately see the best card in their wallet, ranked correctly by multiplier.
-**Current focus:** Phase 5 - Mixed Wallet UX Validation
+**Current focus:** Phase 6 - improve mobile experience
 
 ## Current Position
 
-**Current Phase:** 05
-**Current Phase Name:** mixed wallet ux validation
-**Total Phases:** 5
-**Current Plan:** Not started
+**Current Phase:** 06
+**Current Phase Name:** improve mobile experience
+**Total Phases:** 6
+**Current Plan:** 2
 **Total Plans in Phase:** 3
-**Status:** Milestone complete
-**Last Activity:** 2026-03-06
-**Last Activity Description:** Phase 05 complete
-**Progress:** [██████████] 100%
+**Status:** Ready to execute
+**Last Activity:** 2026-03-14
+**Last Activity Description:** Completed 06-01 mobile layout baseline
+**Progress:** [█████████░] 88%
+
+## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 6 added: improve mobile experience
+- Completed 06-01: establish the mobile layout baseline for compare, wallet, and add-card flows
 
 ## Decisions Made
 
@@ -56,6 +63,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 - [Phase 05]: Create the ranking overflow container from app.js so Task 2 stays scoped to comparison rendering without widening the HTML surface.
 - [Phase 05]: Queue catalog reveal only on the open transition so normal catalog rerenders do not keep forcing scroll position.
 - [Phase 05]: Preserve root-cause and debug-session metadata in 05-UAT.md while marking the diagnosed gaps closed.
+- [Phase 06]: Use form-level editing state classes and viewport-aware form reveal so mobile edit mode becomes obvious without changing create/edit rules. — Keeps the workflow intact while making long-page transitions easier to notice on phones.
 
 ## Blockers
 
@@ -74,9 +82,10 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 | 05 | 01 | 2 min | 2 | 4 |
 | 05 | 02 | 10 min | 2 | 3 |
 | 05 | 03 | 9 min | 2 | 3 |
+| 06 | 01 | 26 min | 2 | 3 |
 
 ## Session
 
-**Last Date:** 2026-03-06T18:03:30Z
-**Stopped At:** Completed 05-03-PLAN.md
+**Last Date:** 2026-03-14T21:52:00-04:00
+**Stopped At:** Completed 06-01-PLAN.md
 **Resume File:** None

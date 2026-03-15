@@ -15,6 +15,7 @@ This milestone evolves CardTracker from manual-entry only into a dual-path walle
 - [x] **Phase 3: Catalog-to-Wallet Integration** - Allow adding/removing catalog cards with duplicate prevention (completed 2026-02-28)
 - [x] **Phase 4: Card Type Rules & Editability** - Enforce read-only catalog cards while preserving editable custom cards (completed 2026-02-28)
 - [x] **Phase 5: Mixed Wallet UX Validation** - Validate combined custom+catalog ranking UX for general users (completed 2026-03-06)
+- [ ] **Phase 6: Improve Mobile Experience** - Improve mobile experience
 
 ## Phase Details
 
@@ -101,3 +102,19 @@ Plans:
 | 3. Catalog-to-Wallet Integration | 3/3 | Complete    | 2026-02-28 |
 | 4. Card Type Rules & Editability | 3/3 | Complete    | 2026-02-28 |
 | 5. Mixed Wallet UX Validation | 3/3 | Complete   | 2026-03-06 |
+| 6. Improve Mobile Experience | 1/3 | In Progress |  |
+
+### Phase 6: Improve Mobile Experience
+**Goal:** Improve phone-width readability and interaction clarity without changing ranking or wallet rules.
+**Depends on:** Phase 5
+**Requirements:** [WAL-03, CAT-01, CAT-02, CAT-03, CAT-04, CUS-01, CUS-02]
+**Success Criteria** (what must be TRUE):
+  1. Compare, wallet, and add-card surfaces remain readable and tap-friendly on phone-sized viewports.
+  2. Mobile users can tell when the catalog opens, rankings expand, or the form enters edit mode.
+  3. Mobile UX polish preserves existing ranking, catalog, and custom-card edit behavior.
+**Plans:** 1/3 plans executed
+
+Plans:
+- [x] 06-01: Establish a mobile-first layout baseline for compare, wallet, and add-card flows
+- [ ] 06-02: Improve mobile interaction clarity for catalog, ranking, and edit transitions
+- [ ] 06-03: Add regression coverage plus mobile UAT and verification artifacts
