@@ -232,6 +232,10 @@ button.ghost {
   background: rgba(238, 248, 244, 0.96);
 }
 
+.mobile-status.is-editing {
+  box-shadow: 0 8px 20px rgba(46, 101, 82, 0.08);
+}
+
 .ranking,
 .card-list,
 .catalog-list {
@@ -459,6 +463,10 @@ button.ghost {
 .card-form.is-editing .form-actions {
   padding-top: 0.25rem;
   border-top: 1px solid #d7e8e2;
+}
+
+.card-form.is-editing .reward-row {
+  border-color: #c8ded4;
 }
 
 .fields {

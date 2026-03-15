@@ -730,6 +730,7 @@ function resetForm() {
   els.rewardRows.innerHTML = "";
   addRewardRow();
   syncCardFormState();
+  syncFormMessaging();
 }
 
 function syncMobileStatus(element, message, options = {}) {
@@ -773,6 +774,7 @@ function startEdit(cardId) {
   }
 
   syncCardFormState();
+  syncFormMessaging(card);
   revealCardFormForCurrentViewport();
   els.cardName.focus();
   els.cardName.select();
@@ -782,6 +784,22 @@ function syncCardFormState() {
   const isEditing = Boolean(state.editingCardId);
   els.cardForm.classList.toggle("is-editing", isEditing);
   els.cardForm.dataset.mode = isEditing ? "editing" : "creating";
+}
+
+function syncFormMessaging(card = null) {
+  if (els.formIntro) {
+    els.formIntro.textContent = card
+      ? "Update this custom card and save when the rewards look right."
+      : "Build or update a custom card with clear reward categories.";
+  }
+
+  const message = card
+    ? `Editing ${card.name}. Cancel Edit returns the form to add mode.`
+    : "";
+  syncMobileStatus(els.formStatus, message, {
+    tone: "editing",
+    shouldShow: Boolean(card),
+  });
 }
 
 function revealCardFormForCurrentViewport() {
