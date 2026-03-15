@@ -417,6 +417,20 @@ button.ghost {
 .card-form {
   display: grid;
   gap: 0.75rem;
+  scroll-margin-top: 1rem;
+}
+
+.card-form.is-editing {
+  border: 1px solid #bfdccf;
+  border-radius: 16px;
+  padding: 0.9rem;
+  background: linear-gradient(180deg, rgba(238, 248, 244, 0.95), rgba(255, 255, 255, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(191, 220, 207, 0.45);
+}
+
+.card-form.is-editing .form-actions {
+  padding-top: 0.25rem;
+  border-top: 1px solid #d7e8e2;
 }
 
 .fields {
@@ -482,6 +496,19 @@ button.ghost {
     gap: 0.45rem;
   }
 
+  .card-form {
+    gap: 0.9rem;
+  }
+
+  .card-form.is-editing {
+    padding: 0.8rem;
+  }
+
+  .fields,
+  .reward-rows {
+    gap: 0.7rem;
+  }
+
   .compare-controls select,
   .catalog-controls input,
   .catalog-controls select,
@@ -510,6 +537,10 @@ button.ghost {
   .card-list li,
   .catalog-list li {
     padding: 0.8rem;
+  }
+
+  .reward-row label {
+    gap: 0.3rem;
   }
 
   .ranking-overflow {

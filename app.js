@@ -20,6 +20,7 @@ const DB_VERSION = 1;
 const STORE_CARDS = "cards";
 const CATALOG_FEEDBACK_MS = 1800;
 const DEFAULT_VISIBLE_RANKING_COUNT = 4;
+const MOBILE_FORM_MEDIA_QUERY = "(max-width: 640px)";
 
 const state = {
   cards: [],
@@ -687,6 +688,7 @@ function resetForm() {
   els.cancelEdit.hidden = true;
   els.rewardRows.innerHTML = "";
   addRewardRow();
+  syncCardFormState();
 }
 
 function startEdit(cardId) {
@@ -706,10 +708,24 @@ function startEdit(cardId) {
     addRewardRow();
   }
 
-  // Make edit mode obvious when the form is below the current viewport.
-  els.cardForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  syncCardFormState();
+  revealCardFormForCurrentViewport();
   els.cardName.focus();
   els.cardName.select();
+}
+
+function syncCardFormState() {
+  const isEditing = Boolean(state.editingCardId);
+  els.cardForm.classList.toggle("is-editing", isEditing);
+  els.cardForm.dataset.mode = isEditing ? "editing" : "creating";
+}
+
+function revealCardFormForCurrentViewport() {
+  const isMobileViewport = globalThis.matchMedia?.(MOBILE_FORM_MEDIA_QUERY).matches;
+  els.cardForm.scrollIntoView({
+    behavior: "smooth",
+    block: isMobileViewport ? "center" : "start",
+  });
 }
 
 function openDb() {
