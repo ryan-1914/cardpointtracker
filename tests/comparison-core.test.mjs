@@ -135,6 +135,25 @@ test("produces deterministic order for identical input", () => {
   );
 });
 
+test("returns the full ranked result set for overflow-sized mobile compare lists", () => {
+  const cards = [
+    { name: "Alpha Rewards", rewards: [{ category: "other", multiplier: 5 }] },
+    { name: "Beta Rewards", rewards: [{ category: "other", multiplier: 4 }] },
+    { name: "Gamma Rewards", rewards: [{ category: "other", multiplier: 3 }] },
+    { name: "Delta Rewards", rewards: [{ category: "other", multiplier: 2 }] },
+    { name: "Epsilon Rewards", rewards: [{ category: "other", multiplier: 1 }] },
+  ];
+
+  const results = computeComparisonResults(cards, "streaming");
+
+  assert.equal(results.length, 5);
+  assert.deepEqual(
+    results.map((entry) => entry.card.name),
+    ["Alpha Rewards", "Beta Rewards", "Gamma Rewards", "Delta Rewards", "Epsilon Rewards"],
+  );
+  assert.equal(results[0].source, "other fallback");
+});
+
 test("formats multipliers by trimming unnecessary trailing zeros", () => {
   assert.equal(formatMultiplier(2), "2x");
   assert.equal(formatMultiplier(1.5), "1.5x");

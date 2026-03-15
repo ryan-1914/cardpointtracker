@@ -142,6 +142,25 @@ test("filterCatalogCards treats issuer matching as case-insensitive exact match"
   assert.ok(lower.every((card) => card.issuer === "American Express"));
 });
 
+test("filterCatalogCards recovers the full catalog after a no-match mobile filter state clears", () => {
+  const cards = buildCatalogCards();
+  const noMatches = filterCatalogCards(cards, {
+    issuer: "Chase",
+    searchTerm: "venture x",
+  });
+  const resetResults = filterCatalogCards(cards, {
+    issuer: "all",
+    searchTerm: "",
+  });
+
+  assert.equal(noMatches.length, 0);
+  assert.equal(resetResults.length, cards.length);
+  assert.deepEqual(
+    resetResults.map((card) => card.name).sort((left, right) => left.localeCompare(right)),
+    cards.map((card) => card.name).sort((left, right) => left.localeCompare(right)),
+  );
+});
+
 test("buildCatalogCards collapses known near-duplicate product aliases", () => {
   const cards = buildCatalogCards([
     { name: "Capital One Venture X", issuer: "Capital One", network: "Visa", rewards: { travel: 2 } },

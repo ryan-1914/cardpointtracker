@@ -300,6 +300,35 @@ test("canDeleteWalletCard allows both custom and catalog wallet entities", () =>
   assert.equal(canDeleteWalletCard(custom), true);
 });
 
+test("mixed wallet normalization preserves custom-only editability after catalog additions", () => {
+  const mixedWallet = normalizeWalletCards([
+    createCatalogWalletCard(
+      {
+        id: "capital-one-savor",
+        name: "Capital One Savor",
+        issuer: "Capital One",
+        rewards: [{ category: "dining", multiplier: 3 }],
+      },
+      "2026-03-14T21:00:00.000Z",
+    ),
+    {
+      id: "custom-weekend",
+      name: "Weekend Custom",
+      issuer: "Neighborhood CU",
+      rewards: [{ category: "dining", multiplier: 4 }],
+    },
+  ]);
+
+  const catalogCard = mixedWallet.find((card) => card.originType === "catalog");
+  const customCard = mixedWallet.find((card) => card.originType === "custom");
+
+  assert.equal(mixedWallet.length, 2);
+  assert.equal(canEditWalletCard(catalogCard), false);
+  assert.equal(canEditWalletCard(customCard), true);
+  assert.equal(canDeleteWalletCard(catalogCard), true);
+  assert.equal(canDeleteWalletCard(customCard), true);
+});
+
 test("catalog card becomes re-addable after removal", () => {
   const catalogCard = createCatalogWalletCard(
     {
