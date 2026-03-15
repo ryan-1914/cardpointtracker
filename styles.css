@@ -72,10 +72,17 @@ body {
 .panel-heading {
   display: grid;
   gap: 0.15rem;
+  min-width: 0;
 }
 
 .panel-heading h2 {
   margin-bottom: 0;
+}
+
+.panel-intro {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .count {
@@ -176,6 +183,7 @@ button.ghost {
   background: #f4fbff;
   border: 1px solid #d6e8f4;
   transition: background-color 140ms ease, border-color 140ms ease;
+  overflow-wrap: anywhere;
 }
 
 .result.result-callout {
@@ -213,6 +221,7 @@ button.ghost {
   border-radius: 12px;
   padding: 0.65rem 0.75rem;
   background: #fff;
+  min-width: 0;
 }
 
 .ranking li.best {
@@ -251,6 +260,7 @@ button.ghost {
   align-items: center;
   gap: 0.45rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .catalog-add-btn.catalog-add-status {
@@ -309,6 +319,7 @@ button.ghost {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .card-item.card-source-catalog {
@@ -325,10 +336,12 @@ button.ghost {
   gap: 0.4rem;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .card-title {
   font-weight: 650;
+  overflow-wrap: anywhere;
 }
 
 .issuer {
@@ -392,6 +405,7 @@ button.ghost {
   border-radius: 99px;
   padding: 0.2rem 0.55rem;
   font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .tag.tag-muted {
@@ -437,6 +451,77 @@ button.ghost {
   .app {
     width: 94vw;
     margin-top: 1.1rem;
+  }
+
+  .hero {
+    padding-inline: 0.25rem;
+  }
+
+  .panel {
+    padding: 0.9rem;
+    border-radius: 16px;
+  }
+
+  .panel-header,
+  .panel-header-stackable,
+  .card-header {
+    align-items: flex-start;
+  }
+
+  .panel-header,
+  .card-header {
+    flex-direction: column;
+  }
+
+  .count {
+    font-size: 0.85rem;
+  }
+
+  .compare-controls,
+  .catalog-controls {
+    gap: 0.45rem;
+  }
+
+  .compare-controls select,
+  .catalog-controls input,
+  .catalog-controls select,
+  .catalog-toggle,
+  .catalog-actions,
+  .card-actions,
+  .form-actions,
+  .ranking-expand {
+    width: 100%;
+  }
+
+  .catalog-actions,
+  .card-actions,
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .catalog-actions > *,
+  .card-actions > *,
+  .form-actions > * {
+    flex: 1 1 100%;
+  }
+
+  .result,
+  .ranking li,
+  .card-list li,
+  .catalog-list li {
+    padding: 0.8rem;
+  }
+
+  .ranking-overflow {
+    align-items: stretch;
+  }
+
+  .issuer-line {
+    flex-wrap: wrap;
+  }
+
+  .tags {
+    gap: 0.4rem;
   }
 
   .reward-row {
