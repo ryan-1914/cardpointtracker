@@ -33,6 +33,17 @@
       },
     },
     {
+      name: "Blue Cash Everyday",
+      issuer: "American Express",
+      network: "American Express",
+      rewards: {
+        groceries: 3,
+        online_retail: 3,
+        gas: 3,
+        other: 1,
+      },
+    },
+    {
       name: "Capital One Venture X",
       issuer: "Capital One",
       network: "Visa",
@@ -152,6 +163,7 @@
     { name: "Chase Freedom Unlimited", issuer: "Chase", network: "Visa" },
     { name: "Chase Freedom Flex", issuer: "Chase", network: "Mastercard" },
     { name: "Blue Cash Preferred", issuer: "American Express", network: "Amex" },
+    { name: "Blue Cash Everyday", issuer: "American Express", network: "Amex" },
     { name: "Capital One Venture X", issuer: "Capital One", network: "Visa" },
     { name: "Capital One Savor", issuer: "Capital One", network: "Mastercard" },
     { name: "Capital One Quicksilver", issuer: "Capital One", network: "Visa" },

@@ -12,7 +12,7 @@ const CATEGORIES = [
   { id: "travel", label: "Travel" },
   { id: "transit", label: "Transit" },
   { id: "streaming", label: "Streaming Services" },
-  { id: "online", label: "Online Shopping" },
+  { id: "online_retail", label: "Online Retail" },
   { id: "drugstore", label: "Drugstores" },
   { id: "other", label: "Everything Else" },
 ];

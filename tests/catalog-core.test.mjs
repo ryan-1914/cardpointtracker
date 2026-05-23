@@ -12,6 +12,7 @@ const {
 } = catalogCore;
 
 const EXPECTED_CATALOG_NAMES = [
+  "Blue Cash Everyday",
   "Blue Cash Preferred",
   "Capital One Quicksilver",
   "Capital One Savor",
@@ -194,6 +195,15 @@ test("buildCatalogCards keeps expected rewards for curated cards", () => {
     { category: "other", multiplier: 1 },
     { category: "streaming", multiplier: 6 },
     { category: "transit", multiplier: 3 },
+  ]);
+
+  const blueCashEveryday = byName.get("Blue Cash Everyday");
+  assert.ok(blueCashEveryday);
+  assert.deepEqual(blueCashEveryday.rewards, [
+    { category: "gas", multiplier: 3 },
+    { category: "groceries", multiplier: 3 },
+    { category: "online_retail", multiplier: 3 },
+    { category: "other", multiplier: 1 },
   ]);
 
   const ventureX = byName.get("Capital One Venture X");
