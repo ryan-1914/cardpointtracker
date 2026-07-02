@@ -104,8 +104,9 @@
       issuer: "Discover",
       network: "Discover",
       rewards: {
-        dining: 5,
-        home_improvement: 5,
+        drugstore: 5,
+        gas: 5,
+        transit: 5,
         other: 1,
       },
     },
@@ -135,9 +136,10 @@
       issuer: "Chase",
       network: "Mastercard",
       rewards: {
-        amazon: 5,
         dining: 3,
         drugstore: 3,
+        gas: 5,
+        transit: 5,
         other: 1,
       },
     },

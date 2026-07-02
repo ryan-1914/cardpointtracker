@@ -234,10 +234,11 @@ test("buildCatalogCards keeps expected rewards for curated cards", () => {
   const freedomFlex = byName.get("Chase Freedom Flex");
   assert.ok(freedomFlex);
   assert.deepEqual(freedomFlex.rewards, [
-    { category: "amazon", multiplier: 5 },
     { category: "dining", multiplier: 3 },
     { category: "drugstore", multiplier: 3 },
+    { category: "gas", multiplier: 5 },
     { category: "other", multiplier: 1 },
+    { category: "transit", multiplier: 5 },
   ]);
 
   const doubleCash = byName.get("Citi Double Cash");
@@ -258,9 +259,10 @@ test("buildCatalogCards keeps expected rewards for curated cards", () => {
   const discoverItCashBack = byName.get("Discover it Cash Back");
   assert.ok(discoverItCashBack);
   assert.deepEqual(discoverItCashBack.rewards, [
-    { category: "dining", multiplier: 5 },
-    { category: "home_improvement", multiplier: 5 },
+    { category: "drugstore", multiplier: 5 },
+    { category: "gas", multiplier: 5 },
     { category: "other", multiplier: 1 },
+    { category: "transit", multiplier: 5 },
   ]);
 
   const altitudeGo = byName.get("U.S. Bank Altitude Go");
